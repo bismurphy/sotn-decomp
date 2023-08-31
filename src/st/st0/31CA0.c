@@ -38,9 +38,10 @@ void TestCollisions(void) {
     u32 comp_v0;
     u32 comp_v1;
 
-    var_a3 = (s32* )0x1F800000;
-    var_s3 = (s32* )0x1F8000C0;
-    for(iterEnt1 = &g_Entities[0]; iterEnt1 < &g_Entities[48]; var_a3++,iterEnt1++){
+    var_a3 = (s32*)0x1F800000;
+    var_s3 = (s32*)0x1F8000C0;
+    for (iterEnt1 = &g_Entities[0]; iterEnt1 < &g_Entities[48]; var_a3++,
+        iterEnt1++) {
         *var_a3 = iterEnt1->hitboxState;
         if ((*var_a3 != 0) && !(*var_a3 & 0x80)) {
             *var_s3 = iterEnt1->posX.i.hi;
@@ -50,8 +51,8 @@ void TestCollisions(void) {
                 *var_s3 += (s16)iterEnt1->hitboxOffX;
             }
             hitboxY_1 = iterEnt1->posY.i.hi + iterEnt1->hitboxOffY;
-            if ((*var_s3 > 0x120 || *var_s3 < -0x20) || 
-                (hitboxY_1 > 0x100 || hitboxY_1 < -0x20) || 
+            if ((*var_s3 > 0x120 || *var_s3 < -0x20) ||
+                (hitboxY_1 > 0x100 || hitboxY_1 < -0x20) ||
                 (iterEnt1->hitboxWidth == 0) || (iterEnt1->hitboxHeight == 0)) {
                 *var_a3 = 0;
             } else {
@@ -65,325 +66,339 @@ void TestCollisions(void) {
         var_s3 += 4;
     }
 
-    //THIS GIGANTIC FOR LOOP CONTROLS EVERYTHING
+    // THIS GIGANTIC FOR LOOP CONTROLS EVERYTHING
     for (iterEnt1 = &g_Entities[64]; iterEnt1 < &g_Entities[192]; iterEnt1++) {
-            hitbox_state = iterEnt1->hitboxState;
-            if ((hitbox_state == 0) || (iterEnt1->hitboxWidth == 0) || (iterEnt1->hitboxHeight == 0) || (((iterEnt1->flags & 0x100) != 0))) {
-                continue;
+        hitbox_state = iterEnt1->hitboxState;
+        if ((hitbox_state == 0) || (iterEnt1->hitboxWidth == 0) ||
+            (iterEnt1->hitboxHeight == 0) ||
+            (((iterEnt1->flags & 0x100) != 0))) {
+            continue;
+        }
+        for (i = 0; i < 11; i++) {
+            if (iterEnt1->unk6D[i] != 0) {
+                iterEnt1->unk6D[i]--;
             }
-            for(i = 0; i < 11;i++){
-                if (iterEnt1->unk6D[i] != 0) {
-                    iterEnt1->unk6D[i] --;
-                }
-            }
-            hitboxX = (u16)iterEnt1->posX.i.hi;
-            if (iterEnt1->facing != 0) {
-                hitboxX -= (u16)iterEnt1->hitboxOffX;
-            } else {
-                hitboxX += (u16)iterEnt1->hitboxOffX;
-            }
-            hitboxY = (u16)iterEnt1->posY.i.hi + (u16)iterEnt1->hitboxOffY;
-            if ((u16)(hitboxX+0x1F) >= 0x13F){
-                continue;
-            }
-            if ((u16)(hitboxY+0x1F) >= 0x11F){
-                continue;
-            }
-            var_s7 = 0;
-            heightM1 = iterEnt1->hitboxHeight - 1;
-            widthM1 = iterEnt1->hitboxWidth - 1;
-            temp_v1_4 = hitbox_state & 0x3E;
-            if (temp_v1_4 != 0) {
-                var_a3 = (s32* )0x1F800004;
-                var_s3 = (s32* )0x1F8000D0;
-                for (iterEnt2 = &g_Entities[1]; iterEnt2 < &g_Entities[48]; iterEnt2++) {
-                    if ((temp_v1_4 & *var_a3) && iterEnt1->unk6D[iterEnt2->enemyId] == 0) {
-                        if ((*var_a3 & 0x80)) {
-                            var_s7 = 0xFF;
-                            iterEnt1->unk44 = (u16) iterEnt2->hitEffect;
-                            break;
-                        }
-                        comp_v0 = *(u16*)var_s3++;
-                        comp_v1 = widthM1 + *var_s3++;
+        }
+        hitboxX = (u16)iterEnt1->posX.i.hi;
+        if (iterEnt1->facing != 0) {
+            hitboxX -= (u16)iterEnt1->hitboxOffX;
+        } else {
+            hitboxX += (u16)iterEnt1->hitboxOffX;
+        }
+        hitboxY = (u16)iterEnt1->posY.i.hi + (u16)iterEnt1->hitboxOffY;
+        if ((u16)(hitboxX + 0x1F) >= 0x13F) {
+            continue;
+        }
+        if ((u16)(hitboxY + 0x1F) >= 0x11F) {
+            continue;
+        }
+        var_s7 = 0;
+        heightM1 = iterEnt1->hitboxHeight - 1;
+        widthM1 = iterEnt1->hitboxWidth - 1;
+        temp_v1_4 = hitbox_state & 0x3E;
+        if (temp_v1_4 != 0) {
+            var_a3 = (s32*)0x1F800004;
+            var_s3 = (s32*)0x1F8000D0;
+            for (iterEnt2 = &g_Entities[1]; iterEnt2 < &g_Entities[48];
+                 iterEnt2++) {
+                if ((temp_v1_4 & *var_a3) &&
+                    iterEnt1->unk6D[iterEnt2->enemyId] == 0) {
+                    if ((*var_a3 & 0x80)) {
+                        var_s7 = 0xFF;
+                        iterEnt1->unk44 = (u16)iterEnt2->hitEffect;
+                        break;
+                    }
+                    comp_v0 = *(u16*)var_s3++;
+                    comp_v1 = widthM1 + *var_s3++;
 
-                        if (comp_v1*2 <= (u16)(comp_v0 - hitboxX + comp_v1)){
-                            comp_v0 = *(u16*)var_s3++;
-                            comp_v1 = heightM1 + *var_s3++;
-                            if (comp_v1*2 <= (u16)(comp_v0 - hitboxY + comp_v1)) {
-                                temp_a1 = iterEnt2->hitEffect;
-                                if (!(iterEnt2->flags & iterEnt1->flags & 0x100000)) {
-                                    iterEnt2->hitFlags = 1;
-                                    iterEnt2->ext.generic.unkB8 = iterEnt1;
-                                    if (temp_a1 == 0xC) {
-                                        if (iterEnt1->flags & 0x8000) {
-                                            iterEnt2->hitFlags = 2;
-                                        }
-                                    }
-                                    if ((temp_a1 == 0xA) && (iterEnt1->flags & 0x4000)) {
+                    if (comp_v1 * 2 <= (u16)(comp_v0 - hitboxX + comp_v1)) {
+                        comp_v0 = *(u16*)var_s3++;
+                        comp_v1 = heightM1 + *var_s3++;
+                        if (comp_v1 * 2 <= (u16)(comp_v0 - hitboxY + comp_v1)) {
+                            temp_a1 = iterEnt2->hitEffect;
+                            if (!(iterEnt2->flags & iterEnt1->flags &
+                                  0x100000)) {
+                                iterEnt2->hitFlags = 1;
+                                iterEnt2->ext.generic.unkB8 = iterEnt1;
+                                if (temp_a1 == 0xC) {
+                                    if (iterEnt1->flags & 0x8000) {
                                         iterEnt2->hitFlags = 2;
                                     }
                                 }
-                                iterEnt1->unk44 = temp_a1;
-                                var_s7 = 0xFF;
-                                break;
-                            } else {
-                                var_a3 ++;
-                            }
-                        } else {
-                            var_a3 ++;
-                            var_s3 += 2;
-                        }
-                        
-                    } else {
-                        var_a3 ++;
-                        var_s3 += 4;
-                    }
-                }
-            }
-            if (hitbox_state & 1) {
-                if (var_s7 == 0) {
-                    iterEnt2 = g_Entities;
-                    var_a3 = (s32* )0x1F800000;
-                    var_s3 = (s32* )0x1F8000C0;
-                    if (iterEnt1->unk6D[PLAYER.enemyId] == 0 && (*var_a3 & 1)) {
-                        comp_v0 = *(u16*)var_s3++;
-                        comp_v1 = widthM1 + *var_s3++;
-                        if (comp_v1*2 <= (u16)(comp_v0 - hitboxX + comp_v1)) {
-                            comp_v0 = *(u16*)var_s3++;
-                            comp_v1 = heightM1 + *var_s3++;
-                            if (comp_v1*2 <= (u16)(comp_v0 - hitboxY + comp_v1)) {
-                                PLAYER.ext.generic.unkB8 = iterEnt1;
-                                PLAYER.hitFlags = 1;
-                                PLAYER.unk44 = iterEnt1->attackElement;
-                                PLAYER.hitPoints = iterEnt1->attack;
-                                iterEnt1->unk44 = PLAYER.hitEffect;
-                                iterEnt1->hitFlags = 0x80;
-                                var_s7 = 0xFF;
-                            }
-                        }
-                    }
-                }
-            }
-        
-            if (var_s7 == 0) {
-                continue;
-            }
-block_61:
-           
-            if (iterEnt1->unk5C != NULL) {
-                var_s2 = iterEnt1->unk5C;
-                var_s2->unk44 = iterEnt1->unk44;
-            } else {
-                var_s2 = iterEnt1;
-            }
-            if ((var_s2->flags & 0x100) || !((u8)var_s7 & 0xFF)) {
-                continue;
-            }
-            var_s4 = D_80181618[var_s2->enemyId];
-            if (var_s4 != 0) {
-                var_s4--;
-                bit_to_set = 1 << (var_s4 & 7);
-                D_8003BF7C[var_s4>>3] |= (bit_to_set);
-            }
-            if ((g_Status.relics[15] & 2) && (var_s2->flags & 0x01000000) == 0) {
-                if (g_BottomCornerTextTimer != 0) {
-                    g_api_FreePrimitives(g_BottomCornerTextPrims);
-                    g_BottomCornerTextTimer = 0;
-                }
-                BottomCornerText(g_api.enemyDefs[var_s2->enemyId].name, 0);
-                var_s2->flags |= 0x01000000;
-            }
-            if (var_s2->hitPoints != 0) {
-                if (iterEnt2->attack != 0) {
-                    if (!(iterEnt2->hitboxState & 0x80)) {
-                        var_s3 -= 4;
-                        hitboxX = (s16)(hitboxX + *var_s3)/2;
-
-                        var_s3 += 2;
-                        hitboxY = (s16)(hitboxY + *var_s3)/2;
-                    }
-                    for(prim = &g_PrimBuf[D_800973F8];prim != NULL;prim = prim->next){
-                        if (prim->blendMode == 8) {
-                            prim->clut = 0x199;
-                            
-                            primRand = ((Random() & 7) - 0xD);
-                            prim->x0 = prim->x2 = hitboxX + primRand - 3;
-                            prim->x1 = prim->x3 = hitboxX + primRand + 0x1D;
-                            
-                            primRand = ((Random() & 7) - 0xA);
-                            prim->y0 = prim->y1 = hitboxY + primRand - 3;
-                            prim->y2 = prim->y3 = hitboxY + primRand + 0x1D;
-                            prim->p1 = 0;
-
-                            if (iterEnt2->zPriority > iterEnt1->zPriority) {
-                                 prim->priority = iterEnt2->zPriority + 1;
-                            } else {
-                                 prim->priority = iterEnt1->zPriority + 1;
-                            }
-                            prim->blendMode = 2;
-                            break;
-                        }
-                    }
-                    
-                    if ((iterEnt2->attack != 0) && (var_s2->hitPoints != 0x7FFF)) {
-                        var_s4 = g_api_DealDamage(iterEnt1, iterEnt2);
-                        if (var_s4 == 0x4000) {
-                            var_s4 = 0;
-                        }
-                        if (g_Status.relics[11] & 2) {
-                            if (!(var_s2->flags & 0x04000000)) {
-                                extraEnt = AllocEntity(&g_Entities[160], &g_Entities[192]);
-                                if (extraEnt != NULL) {
-                                    DestroyEntity(extraEnt);
-                                    extraEnt->entityId = 4;
-                                    extraEnt->pfnUpdate = EntityNumericDamage;
-                                    extraEnt->posX.i.hi = (s16) hitboxX;
-                                    extraEnt->posY.i.hi = (s16) hitboxY;
-                                    extraEnt->params = var_s4;
+                                if ((temp_a1 == 0xA) &&
+                                    (iterEnt1->flags & 0x4000)) {
+                                    iterEnt2->hitFlags = 2;
                                 }
                             }
+                            iterEnt1->unk44 = temp_a1;
+                            var_s7 = 0xFF;
+                            break;
+                        } else {
+                            var_a3++;
                         }
                     } else {
+                        var_a3++;
+                        var_s3 += 2;
+                    }
+
+                } else {
+                    var_a3++;
+                    var_s3 += 4;
+                }
+            }
+        }
+        if (hitbox_state & 1) {
+            if (var_s7 == 0) {
+                iterEnt2 = g_Entities;
+                var_a3 = (s32*)0x1F800000;
+                var_s3 = (s32*)0x1F8000C0;
+                if (iterEnt1->unk6D[PLAYER.enemyId] == 0 && (*var_a3 & 1)) {
+                    comp_v0 = *(u16*)var_s3++;
+                    comp_v1 = widthM1 + *var_s3++;
+                    if (comp_v1 * 2 <= (u16)(comp_v0 - hitboxX + comp_v1)) {
+                        comp_v0 = *(u16*)var_s3++;
+                        comp_v1 = heightM1 + *var_s3++;
+                        if (comp_v1 * 2 <= (u16)(comp_v0 - hitboxY + comp_v1)) {
+                            PLAYER.ext.generic.unkB8 = iterEnt1;
+                            PLAYER.hitFlags = 1;
+                            PLAYER.unk44 = iterEnt1->attackElement;
+                            PLAYER.hitPoints = iterEnt1->attack;
+                            iterEnt1->unk44 = PLAYER.hitEffect;
+                            iterEnt1->hitFlags = 0x80;
+                            var_s7 = 0xFF;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (var_s7 == 0) {
+            continue;
+        }
+    block_61:
+
+        if (iterEnt1->unk5C != NULL) {
+            var_s2 = iterEnt1->unk5C;
+            var_s2->unk44 = iterEnt1->unk44;
+        } else {
+            var_s2 = iterEnt1;
+        }
+        if ((var_s2->flags & 0x100) || !((u8)var_s7 & 0xFF)) {
+            continue;
+        }
+        var_s4 = D_80181618[var_s2->enemyId];
+        if (var_s4 != 0) {
+            var_s4--;
+            bit_to_set = 1 << (var_s4 & 7);
+            D_8003BF7C[var_s4 >> 3] |= (bit_to_set);
+        }
+        if ((g_Status.relics[RELIC_FAERIE_SCROLL] & 2) && (var_s2->flags & 0x01000000) == 0) {
+            if (g_BottomCornerTextTimer != 0) {
+                g_api_FreePrimitives(g_BottomCornerTextPrims);
+                g_BottomCornerTextTimer = 0;
+            }
+            BottomCornerText(g_api.enemyDefs[var_s2->enemyId].name, 0);
+            var_s2->flags |= 0x01000000;
+        }
+        if (var_s2->hitPoints != 0) {
+            if (iterEnt2->attack != 0) {
+                if (!(iterEnt2->hitboxState & 0x80)) {
+                    var_s3 -= 4;
+                    hitboxX = (s16)(hitboxX + *var_s3) / 2;
+
+                    var_s3 += 2;
+                    hitboxY = (s16)(hitboxY + *var_s3) / 2;
+                }
+                for (prim = &g_PrimBuf[D_800973F8]; prim != NULL;
+                     prim = prim->next) {
+                    if (prim->blendMode == 8) {
+                        prim->clut = 0x199;
+
+                        primRand = ((Random() & 7) - 0xD);
+                        prim->x0 = prim->x2 = hitboxX + primRand - 3;
+                        prim->x1 = prim->x3 = hitboxX + primRand + 0x1D;
+
+                        primRand = ((Random() & 7) - 0xA);
+                        prim->y0 = prim->y1 = hitboxY + primRand - 3;
+                        prim->y2 = prim->y3 = hitboxY + primRand + 0x1D;
+                        prim->p1 = 0;
+
+                        if (iterEnt2->zPriority > iterEnt1->zPriority) {
+                            prim->priority = iterEnt2->zPriority + 1;
+                        } else {
+                            prim->priority = iterEnt1->zPriority + 1;
+                        }
+                        prim->blendMode = 2;
+                        break;
+                    }
+                }
+
+                if ((iterEnt2->attack != 0) && (var_s2->hitPoints != 0x7FFF)) {
+                    var_s4 = g_api_DealDamage(iterEnt1, iterEnt2);
+                    if (var_s4 == 0x4000) {
                         var_s4 = 0;
                     }
-                } else {
-                    var_s4 = 0;
-                }
-                
-                if (var_s4 != 0xC000) {
-                    if (var_s4 & 0x8000) {
-                        var_s7 = 9;
-                    } else {
-                        temp_s1_2 = iterEnt2->attackElement;
-                        if (temp_s1_2 & 0xFFC0) {
-                            for(i=0;i<10;i++){
-                                if ((temp_s1_2 & D_80181948[i])) {
-                                    var_s7 = D_8018195C[i];
-                                    break;
-                                }
+                    if (g_Status.relics[RELIC_SPIRIT_ORB] & 2) {
+                        if (!(var_s2->flags & 0x04000000)) {
+                            extraEnt =
+                                AllocEntity(&g_Entities[160], &g_Entities[192]);
+                            if (extraEnt != NULL) {
+                                DestroyEntity(extraEnt);
+                                extraEnt->entityId = 4;
+                                extraEnt->pfnUpdate = EntityNumericDamage;
+                                extraEnt->posX.i.hi = (s16)hitboxX;
+                                extraEnt->posY.i.hi = (s16)hitboxY;
+                                extraEnt->params = var_s4;
                             }
-                        } else {
-                            var_s7 = 0;
                         }
                     }
                 } else {
                     var_s4 = 0;
-                    var_s2->hitFlags |= 0x20;
                 }
-                
-                if (var_s4 != 0) {
-                    if (var_s4 & 0x8000) {
-                        var_s2->hitPoints += (var_s4 & 0x3FFF);
-                        temp_s1_3 = g_api.enemyDefs[var_s2->enemyId].hitPoints;
-                        if (temp_s1_3 < var_s2->hitPoints) {
-                            var_s2->hitPoints = temp_s1_3;
-                        }
-                    } else {
-                        var_s4 &= 0x3FFF;
-                        g_api_PlaySfx(0x705);
-                        if (var_s2->hitPoints != 0x7FFE) {
-                            if (var_s2->hitPoints < (var_s4 * 2)) {
-                                var_s2->hitFlags |= 3;
-                            } else if (var_s2->hitPoints < (var_s4 * 4)) {
-                                var_s2->hitFlags |= 2;
-                            } else {
-                                var_s2->hitFlags |= 1;
-                            }
-                            var_s2->hitPoints -= var_s4;
-                        }
-                    }
-                    
-                    extraEnt = var_s2;
-                    if (var_s2->hitPoints > 0) {
-                        temp_enemyId = iterEnt2->enemyId;
-                        do{
-                            extraEnt->unk6D[temp_enemyId] = iterEnt2->nFramesInvincibility;
-                            if ((iterEnt1->flags & 0x400000)==0) {
-                                extraEnt->stunFrames = iterEnt2->stunFrames;
-                            }
-                            if ((extraEnt->hitEffect == 0) && !(extraEnt->flags & 0xF)) {
-                                extraEnt->hitEffect = extraEnt->palette;
-                            }
-                            extraEnt->nFramesInvincibility = var_s7;
-                            extraEnt->flags |= 0xF;
-                            extraEnt = (Entity* ) extraEnt->unk60;
-                        }while (extraEnt != NULL && extraEnt != var_s2);
-                        continue;
-                    } else {
-                        goto block_127;
-                    }
-                } 
             } else {
-block_127:
-                PreventEntityFromRespawning(var_s2);
-                g_api_func_800FE044((u16) g_api_enemyDefs[var_s2->enemyId].exp, (u16) g_api_enemyDefs[var_s4].level);
-                if ((var_s2->flags & 0x1000) && (g_Status.killCount < 999999)) {
-                    g_Status.killCount += 1;
-                }
-                if (var_s2->flags & 0xC00) {
-                    if ((u32) (rand() & 0xFF) < 0x20U) {
-                        extraEnt = AllocEntity(&g_Entities[160], &g_Entities[192]);
-                        if (extraEnt != NULL) {
-                            temp_a1_2 = rand() & 0xFF;
-                            temp_a0_6 = &g_api_enemyDefs[var_s4 & 0xFFFF];
-                            if (temp_a1_2 >= temp_a0_6->rareItemDropRate) {
-                                rareDropDiff = temp_a1_2 - temp_a0_6->rareItemDropRate;
-                                var_s1_2 = ((rareDropDiff < (u16) temp_a0_6->uncommonItemDropRate) ^ 1) * 2;
-                            } else {
-                                var_s1_2 = 1;
+                var_s4 = 0;
+            }
+
+            if (var_s4 != 0xC000) {
+                if (var_s4 & 0x8000) {
+                    var_s7 = 9;
+                } else {
+                    temp_s1_2 = iterEnt2->attackElement;
+                    if (temp_s1_2 & 0xFFC0) {
+                        for (i = 0; i < 10; i++) {
+                            if ((temp_s1_2 & D_80181948[i])) {
+                                var_s7 = D_8018195C[i];
+                                break;
                             }
-                            if ((var_s1_2 & 0xFFFF) >= 0x80U) {
-                                var_s1_2 -= 0x80;
-                                var_a0 = 0xA;
-                            } else {
-                                var_a0 = 3;
-                            }
-                            CreateEntityFromEntity(var_a0, iterEnt1, extraEnt);
-                            extraEnt->params = var_s1_2;
-                            extraEnt->velocityY = -0x38000;
                         }
-                        
+                    } else {
+                        var_s7 = 0;
                     }
                 }
-                
+            } else {
+                var_s4 = 0;
+                var_s2->hitFlags |= 0x20;
+            }
+
+            if (var_s4 != 0) {
+                if (var_s4 & 0x8000) {
+                    var_s2->hitPoints += (var_s4 & 0x3FFF);
+                    temp_s1_3 = g_api.enemyDefs[var_s2->enemyId].hitPoints;
+                    if (temp_s1_3 < var_s2->hitPoints) {
+                        var_s2->hitPoints = temp_s1_3;
+                    }
+                } else {
+                    var_s4 &= 0x3FFF;
+                    g_api_PlaySfx(0x705);
+                    if (var_s2->hitPoints != 0x7FFE) {
+                        if (var_s2->hitPoints < (var_s4 * 2)) {
+                            var_s2->hitFlags |= 3;
+                        } else if (var_s2->hitPoints < (var_s4 * 4)) {
+                            var_s2->hitFlags |= 2;
+                        } else {
+                            var_s2->hitFlags |= 1;
+                        }
+                        var_s2->hitPoints -= var_s4;
+                    }
+                }
+
                 extraEnt = var_s2;
-                do{
-                    extraEnt->flags |= 0x10C100;
-                    extraEnt->flags &= 0xDFFFFFFF;
-                    if (extraEnt->hitEffect == 0) {
-                        extraEnt->hitEffect = extraEnt->palette;
-                    }
-                    extraEnt->nFramesInvincibility = var_s7;
-                    extraEnt->flags |= 0xF;
-                    extraEnt = (Entity* ) extraEnt->unk60;
-                    
-                }while (extraEnt != NULL && extraEnt != var_s2);
-                    
-                continue;
-            }
-        
-            extraEnt = var_s2;
-            if (!(var_s2->hitFlags & 0xF)) {
-                var_s2->hitFlags |= 0x10;
-            }
-        
-            temp_enemyId = iterEnt2->enemyId;
-            do{
-                if ((iterEnt1->hitPoints != 0x7FFF) || (extraEnt->hitPoints == iterEnt1->hitPoints)) {
-                    extraEnt->unk6D[temp_enemyId] = iterEnt2->nFramesInvincibility;
+                if (var_s2->hitPoints > 0) {
+                    temp_enemyId = iterEnt2->enemyId;
+                    do {
+                        extraEnt->unk6D[temp_enemyId] =
+                            iterEnt2->nFramesInvincibility;
+                        if ((iterEnt1->flags & 0x400000) == 0) {
+                            extraEnt->stunFrames = iterEnt2->stunFrames;
+                        }
+                        if ((extraEnt->hitEffect == 0) &&
+                            !(extraEnt->flags & 0xF)) {
+                            extraEnt->hitEffect = extraEnt->palette;
+                        }
+                        extraEnt->nFramesInvincibility = var_s7;
+                        extraEnt->flags |= 0xF;
+                        extraEnt = (Entity*)extraEnt->unk60;
+                    } while (extraEnt != NULL && extraEnt != var_s2);
+                    continue;
+                } else {
+                    goto block_127;
                 }
-                extraEnt = (Entity* ) extraEnt->unk60;
-            }while ((extraEnt != NULL) && (extraEnt != var_s2));
-                        
+            }
+        } else {
+        block_127:
+            PreventEntityFromRespawning(var_s2);
+            g_api_func_800FE044((u16)g_api_enemyDefs[var_s2->enemyId].exp,
+                                (u16)g_api_enemyDefs[var_s4].level);
+            if ((var_s2->flags & 0x1000) && (g_Status.killCount < 999999)) {
+                g_Status.killCount += 1;
+            }
+            if (var_s2->flags & 0xC00) {
+                if ((u32)(rand() & 0xFF) < 0x20U) {
+                    extraEnt = AllocEntity(&g_Entities[160], &g_Entities[192]);
+                    if (extraEnt != NULL) {
+                        temp_a1_2 = rand() & 0xFF;
+                        temp_a0_6 = &g_api_enemyDefs[var_s4 & 0xFFFF];
+                        if (temp_a1_2 >= temp_a0_6->rareItemDropRate) {
+                            rareDropDiff =
+                                temp_a1_2 - temp_a0_6->rareItemDropRate;
+                            var_s1_2 = ((rareDropDiff <
+                                         (u16)temp_a0_6->uncommonItemDropRate) ^
+                                        1) *
+                                       2;
+                        } else {
+                            var_s1_2 = 1;
+                        }
+                        if ((var_s1_2 & 0xFFFF) >= 0x80U) {
+                            var_s1_2 -= 0x80;
+                            var_a0 = 0xA;
+                        } else {
+                            var_a0 = 3;
+                        }
+                        CreateEntityFromEntity(var_a0, iterEnt1, extraEnt);
+                        extraEnt->params = var_s1_2;
+                        extraEnt->velocityY = -0x38000;
+                    }
+                }
+            }
+
+            extraEnt = var_s2;
+            do {
+                extraEnt->flags |= 0x10C100;
+                extraEnt->flags &= 0xDFFFFFFF;
+                if (extraEnt->hitEffect == 0) {
+                    extraEnt->hitEffect = extraEnt->palette;
+                }
+                extraEnt->nFramesInvincibility = var_s7;
+                extraEnt->flags |= 0xF;
+                extraEnt = (Entity*)extraEnt->unk60;
+
+            } while (extraEnt != NULL && extraEnt != var_s2);
+
+            continue;
         }
-    //END OF GIGANTIC FOR LOOP
-    
-    for(prim = &g_PrimBuf[D_800973F8]; prim != NULL; prim = prim->next){
+
+        extraEnt = var_s2;
+        if (!(var_s2->hitFlags & 0xF)) {
+            var_s2->hitFlags |= 0x10;
+        }
+
+        temp_enemyId = iterEnt2->enemyId;
+        do {
+            if ((iterEnt1->hitPoints != 0x7FFF) ||
+                (extraEnt->hitPoints == iterEnt1->hitPoints)) {
+                extraEnt->unk6D[temp_enemyId] = iterEnt2->nFramesInvincibility;
+            }
+            extraEnt = (Entity*)extraEnt->unk60;
+        } while ((extraEnt != NULL) && (extraEnt != var_s2));
+    }
+    // END OF GIGANTIC FOR LOOP
+
+    for (prim = &g_PrimBuf[D_800973F8]; prim != NULL; prim = prim->next) {
         if (prim->blendMode != 8) {
             var_s7 = prim->p1;
             prim->u0 = prim->u2 = D_80181938[var_s7];
             prim->u1 = prim->u3 = prim->u0 + 0x20;
-            prim->v0 = prim->v1 = D_80181938[var_s7+2];
+            prim->v0 = prim->v1 = D_80181938[var_s7 + 2];
             prim->v2 = prim->v3 = prim->v0 + 0x20;
             if (++var_s7 >= 7) {
                 prim->blendMode = 8;
