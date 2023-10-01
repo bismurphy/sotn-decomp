@@ -331,6 +331,10 @@ context:
 	$(M2CTX) $(SOURCE)
 	@echo ctx.c has been updated.
 
+#Creates a page on decomp.me for a function by name. For example, `make decompme func_80101234`.
+decompme:
+	python3 tools/make_decompme.py $(filter-out $@,$(MAKECMDGOALS))
+
 extract_disk: extract_disk_$(VERSION)
 disk_prepare: build $(SOTNDISK)
 	mkdir -p $(DISK_DIR)

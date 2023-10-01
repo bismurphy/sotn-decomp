@@ -64,15 +64,15 @@ def send_to_decompme(data):
         print(e)
     return
 
-parser = argparse.ArgumentParser(description="Generate call diagram SVGs")
+parser = argparse.ArgumentParser(description="Make decomp.me page for a function")
 parser.add_argument(
     "func_name",
     help="Name of function to create a decomp.me page for",
 )
 
 args = parser.parse_args()
-
 asm_filename = parse_func_name(args.func_name)
+print(asm_filename)
 c_filename = get_c_filename(asm_filename)
 import_string = f'tools/decomp-permuter/import.py {c_filename} {asm_filename}'
 print(f"Calling {import_string}")
