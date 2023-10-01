@@ -2,6 +2,7 @@
 import argparse
 from pathlib import Path
 import os
+import re
 
 def parse_func_name(func_name):
     # Built a list of tuples. Element 0 is function name, Element 1 is file path
@@ -33,54 +34,65 @@ def get_c_filename(asm_filename):
     assert os.path.exists(c_filename)
     return c_filename
 
-def send_to_decompme(data):
-    #This is copied directly from decomp-permuter/import.py
-    api_base = os.environ.get("DECOMPME_API_BASE", "https://decomp.me")
-    compiler_name = get_decompme_compiler_name(compiler, settings, api_base)
-    source, context = prune_and_separate_context(source, args.prune, func_name)
-    print("Uploading...")
-    try:
-        post_data = urllib.parse.urlencode(
-            {
-                "name": func_name,
-                "target_asm": asm_cont,
-                "context": context,
-                "source_code": source,
-                "compiler": compiler_name,
-                "compiler_flags": get_compiler_flags(compiler),
-                "diff_label": func_name,
-            }
-        ).encode("ascii")
-        with urllib.request.urlopen(f"{api_base}/api/scratch", post_data) as f:
-            resp = f.read()
-            json_data: Dict[str, str] = json.loads(resp)
-            if "slug" in json_data:
-                slug = json_data["slug"]
-                print(f"https://decomp.me/scratch/{slug}")
-            else:
-                error = json_data.get("error", resp)
-                print(f"Server error: {error}")
-    except Exception as e:
-        print(e)
-    return
+# Find jump tables in code, locate the rodata and paste at the end of the file
+def resolve_jumptable(asm_filename):
+    with open(asm_filename,'r+') as asm_file:
+        lines = asm_file.readlines()
+        for i,line in enumerate(lines):
+            # looking for a line with a jr, but not with $ra
+            if 'jr' not in line or '$ra' in line:
+                continue
+            print("bingbong")
+            print(line)
+            jumpreg = line.split()[-1]
+            if 'nop' not in lines[i-1]:
+                exit(1)
+            #Build a regex to search for the standard jump table setup
+            lw_regex = 'lw\s*\\' + jumpreg + ', %lo\(([^)]*)\)\(\$at\)'
+            jumptable_name = re.search(lw_regex,lines[i-2]).group(1)
+            print(f"Jumptable: {jumptable_name}")
+            addu_regex = 'addu\s*\$at, \$at, \\' + jumpreg
+            adducheck = re.search(addu_regex,lines[i-3])
+            if adducheck == None:
+                exit(2)
+            lui_regex = 'lui\s*\$at, %hi\(' + jumptable_name + '\)'
+            luicheck = re.search(lui_regex,lines[i-4])
+            if luicheck == None:
+                exit(3)
+            #confirmed the jump table is as expected. Now find it.
+            paths = list(Path('asm').rglob("*.rodata.s")) + \
+                    list(Path('asm').rglob("*.data.s"))
+            for rodata_file in paths:
+                with open(rodata_file) as f:
+                    rodata = f.read()
+                    if jumptable_name not in rodata:
+                        continue
+                    all_rodata_lines = rodata.split('\n')
+                    outlines = ['.section .rodata']
+                    for line in all_rodata_lines:
+                        if jumptable_name in line or len(outlines) > 1:
+                            outlines.append(line)
+                            if len(line) == 0:
+                                print("Outputting")
+                                print(outlines)
+                                asm_file.write('\n'.join(outlines))
+                                break
 
-parser = argparse.ArgumentParser(description="Make decomp.me page for a function")
-parser.add_argument(
-    "func_name",
-    help="Name of function to create a decomp.me page for",
-)
-parser.add_argument(
-    "--dry",
-    action="store_true",
-    help="Perform a dry run, generating local files but not uploading to decompme",
-)
+if __name__ == "__main__":
+    # Start by finding the function
+    parser = argparse.ArgumentParser(description="Make decomp.me page for a function")
+    parser.add_argument(
+        "func_name",
+        help="Name of function to create a decomp.me page for",
+    )
+    args = parser.parse_args()
+    asm_filename = parse_func_name(args.func_name)
+    print(asm_filename)
+    c_filename = get_c_filename(asm_filename)
+    # Function is found. Now resolve any jump tables by appending rodata
+    resolve_jumptable(asm_filename)
+    # Decompile function locally. 
 
-args = parser.parse_args()
-asm_filename = parse_func_name(args.func_name)
-print(asm_filename)
-c_filename = get_c_filename(asm_filename)
-import_string = f'tools/decomp-permuter/import.py {c_filename} {asm_filename}'
-if not args.dry:
-    import_string.append(' --decompme')
-print(f"Calling {import_string}")
-os.system(import_string)
+    import_string = f'tools/decomp-permuter/import.py {c_filename} {asm_filename}'
+    print(f"Calling {import_string}")
+    os.system(import_string)
