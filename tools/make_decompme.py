@@ -69,11 +69,18 @@ parser.add_argument(
     "func_name",
     help="Name of function to create a decomp.me page for",
 )
+parser.add_argument(
+    "--dry",
+    action="store_true",
+    help="Perform a dry run, generating local files but not uploading to decompme",
+)
 
 args = parser.parse_args()
 asm_filename = parse_func_name(args.func_name)
 print(asm_filename)
 c_filename = get_c_filename(asm_filename)
 import_string = f'tools/decomp-permuter/import.py {c_filename} {asm_filename}'
+if not args.dry:
+    import_string.append(' --decompme')
 print(f"Calling {import_string}")
 os.system(import_string)

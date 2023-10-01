@@ -332,8 +332,9 @@ context:
 	@echo ctx.c has been updated.
 
 #Creates a page on decomp.me for a function by name. For example, `make decompme func_80101234`.
+# Strange pattern at the end passes argument of make command onward to the python script
 decompme:
-	python3 tools/make_decompme.py $(filter-out $@,$(MAKECMDGOALS))
+	$(PYTHON) tools/make_decompme.py $(filter-out $@,$(MAKECMDGOALS))
 
 extract_disk: extract_disk_$(VERSION)
 disk_prepare: build $(SOTNDISK)
