@@ -14,6 +14,6 @@
 	path = tools/maspsx
 	url = https://github.com/mkst/maspsx.git
 [submodule "tools/decomp-permuter"]
-    path = tools/decomp-permuter
-    url = https://github.com/simonlindholm/decomp-permuter.git
+	path = tools/decomp-permuter
+	url = https://github.com/simonlindholm/decomp-permuter.git
 
