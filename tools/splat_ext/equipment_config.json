@@ -3,7 +3,7 @@
         "desc_addr": "str_ptr",
         "attack": "s16",
         "defense": "s16",
-        "element": "s16",
+        "element": "u16",
         "itemCategory": "u8",
         "weaponId": "u8",
         "palette": "u8",
