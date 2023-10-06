@@ -54,7 +54,7 @@ class PSXSegAccessory(N64Segment):
         return options.opts.asset_path / self.dir / self.name
 
     def src_path(self) -> Optional[Path]:
-        return options.opts.asset_path / self.dir / f"{self.name}.accessory.json"
+        return options.opts.asset_path / self.dir / f"{self.name}.json"
 
     def split(self, rom_bytes):
         path = self.src_path()

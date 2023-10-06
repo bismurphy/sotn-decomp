@@ -1,0 +1,146 @@
+SECTIONS
+{
+    __romPos = 0;
+    _gp = 0x0;
+    stwrp_ROM_START = __romPos;
+    stwrp_VRAM = ADDR(.stwrp);
+    .stwrp 0x80180000 : AT(stwrp_ROM_START) SUBALIGN(4)
+    {
+        stwrp_DATA_START = .;
+        header_c = .;
+        build/us/src/st/wrp/header.c.o(.data);
+        rooms = .;
+        build/us/assets/st/wrp/rooms.o(.data);
+        _6FD0_c = .;
+        build/us/src/st/wrp/6FD0.c.o(.data);
+        entity_relic_orb_c = .;
+        build/us/src/st/wrp/entity_relic_orb.c.o(.data);
+        F420_c = .;
+        build/us/src/st/wrp/F420.c.o(.data);
+        g_Rooms = .;
+        build/us/assets/st/wrp/g_Rooms.o(.data);
+        D_80181228 = .;
+        build/us/assets/st/wrp/D_80181228.o(.data);
+        D_80181250 = .;
+        build/us/assets/st/wrp/D_80181250.o(.data);
+        D_80181278 = .;
+        build/us/assets/st/wrp/D_80181278.o(.data);
+        D_801812A0 = .;
+        build/us/assets/st/wrp/D_801812A0.o(.data);
+        D_801812C8 = .;
+        build/us/assets/st/wrp/D_801812C8.o(.data);
+        D_801812F0 = .;
+        build/us/assets/st/wrp/D_801812F0.o(.data);
+        D_80181304 = .;
+        build/us/assets/st/wrp/D_80181304.o(.data);
+        D_80181324 = .;
+        build/us/assets/st/wrp/D_80181324.o(.data);
+        D_8018134C = .;
+        build/us/assets/st/wrp/D_8018134C.o(.data);
+        D_80181374 = .;
+        build/us/assets/st/wrp/D_80181374.o(.data);
+        D_8018139C = .;
+        build/us/assets/st/wrp/D_8018139C.o(.data);
+        D_801813C4 = .;
+        build/us/assets/st/wrp/D_801813C4.o(.data);
+        D_801813EC = .;
+        build/us/assets/st/wrp/D_801813EC.o(.data);
+        D_80181400 = .;
+        build/us/assets/st/wrp/D_80181400.o(.data);
+        D_80181420 = .;
+        build/us/assets/st/wrp/D_80181420.o(.data);
+        D_80181764 = .;
+        build/us/assets/st/wrp/D_80181764.o(.data);
+        D_80181D08 = .;
+        build/us/assets/st/wrp/D_80181D08.o(.data);
+        D_80181D68 = .;
+        build/us/assets/st/wrp/D_80181D68.o(.data);
+        D_80181F68 = .;
+        build/us/assets/st/wrp/D_80181F68.o(.data);
+        D_80182168 = .;
+        build/us/assets/st/wrp/D_80182168.o(.data);
+        D_80182368 = .;
+        build/us/assets/st/wrp/D_80182368.o(.data);
+        D_80182568 = .;
+        build/us/assets/st/wrp/D_80182568.o(.data);
+        D_80182768 = .;
+        build/us/assets/st/wrp/D_80182768.o(.data);
+        D_80182968 = .;
+        build/us/assets/st/wrp/D_80182968.o(.data);
+        D_80182A68 = .;
+        build/us/assets/st/wrp/D_80182A68.o(.data);
+        D_80182B68 = .;
+        build/us/assets/st/wrp/D_80182B68.o(.data);
+        D_80182C68 = .;
+        build/us/assets/st/wrp/D_80182C68.o(.data);
+        D_80182D68 = .;
+        build/us/assets/st/wrp/D_80182D68.o(.data);
+        D_80182D78 = .;
+        build/us/assets/st/wrp/D_80182D78.o(.data);
+        D_80183D78 = .;
+        build/us/assets/st/wrp/D_80183D78.o(.data);
+        D_80184D78 = .;
+        build/us/assets/st/wrp/D_80184D78.o(.data);
+        D_80185D78 = .;
+        build/us/assets/st/wrp/D_80185D78.o(.data);
+        D_80186D78 = .;
+        build/us/assets/st/wrp/D_80186D78.o(.data);
+        D_80186D88 = .;
+        build/us/assets/st/wrp/D_80186D88.o(.data);
+        stwrp_DATA_END = .;
+        stwrp_DATA_SIZE = ABSOLUTE(stwrp_DATA_END - stwrp_DATA_START);
+        stwrp_RODATA_START = .;
+        build/us/src/st/wrp/6FD0.c.o(.rodata);
+        build/us/asm/us/st/wrp/data/6E70.rodata.s.o(.rodata);
+        build/us/asm/us/st/wrp/data/6E90.rodata.s.o(.rodata);
+        build/us/asm/us/st/wrp/data/6EA8.rodata.s.o(.rodata);
+        build/us/asm/us/st/wrp/data/6EC0.rodata.s.o(.rodata);
+        build/us/src/st/wrp/D020.c.o(.rodata);
+        build/us/src/st/wrp/D020.c.o(.rodata);
+        build/us/src/st/wrp/entity_relic_orb.c.o(.rodata);
+        build/us/src/st/wrp/entity_message_box.c.o(.rodata);
+        build/us/asm/us/st/wrp/data/6F94.rodata.s.o(.rodata);
+        stwrp_RODATA_END = .;
+        stwrp_RODATA_SIZE = ABSOLUTE(stwrp_RODATA_END - stwrp_RODATA_START);
+        stwrp_TEXT_START = .;
+        build/us/src/st/wrp/6FD0.c.o(.text);
+        build/us/src/st/wrp/random.c.o(.text);
+        build/us/src/st/wrp/update.c.o(.text);
+        build/us/src/st/wrp/update_stage_entities.c.o(.text);
+        build/us/src/st/wrp/861C.c.o(.text);
+        build/us/src/st/wrp/D020.c.o(.text);
+        build/us/src/st/wrp/entity_relic_orb.c.o(.text);
+        build/us/src/st/wrp/entity_heart_drop.c.o(.text);
+        build/us/src/st/wrp/entity_message_box.c.o(.text);
+        build/us/src/st/wrp/F420.c.o(.text);
+        stwrp_TEXT_END = .;
+        stwrp_TEXT_SIZE = ABSOLUTE(stwrp_TEXT_END - stwrp_TEXT_START);
+        build/us/asm/us/st/wrp/data/13AA0.sbss.s.o(.sbss);
+    }
+    stwrp_bss_VRAM = ADDR(.stwrp_bss);
+    .stwrp_bss (NOLOAD) : SUBALIGN(4)
+    {
+        stwrp_BSS_START = .;
+        build/us/src/st/wrp/6FD0.c.o(.bss);
+        build/us/src/st/wrp/random.c.o(.bss);
+        build/us/src/st/wrp/update.c.o(.bss);
+        build/us/src/st/wrp/update_stage_entities.c.o(.bss);
+        build/us/src/st/wrp/861C.c.o(.bss);
+        build/us/src/st/wrp/D020.c.o(.bss);
+        build/us/src/st/wrp/entity_relic_orb.c.o(.bss);
+        build/us/src/st/wrp/entity_heart_drop.c.o(.bss);
+        build/us/src/st/wrp/entity_message_box.c.o(.bss);
+        build/us/src/st/wrp/F420.c.o(.bss);
+        stwrp_BSS_END = .;
+        stwrp_BSS_SIZE = ABSOLUTE(stwrp_BSS_END - stwrp_BSS_START);
+    }
+    __romPos += SIZEOF(.stwrp);
+    __romPos = ALIGN(__romPos, 16);
+    stwrp_ROM_END = __romPos;
+    stwrp_VRAM_END = .;
+
+    /DISCARD/ :
+    {
+        *(*);
+    }
+}
