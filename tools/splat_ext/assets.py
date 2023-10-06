@@ -26,6 +26,24 @@ def get_serializer(dataType: str):
             return utils.from_u32
         case _:
             print(f"Failed to find serializer for {dataType}")
+
+def get_parser_and_size(dataType: str):
+    match dataType:
+        case "str_ptr":
+            return (utils.to_ptr_str, 4)
+        case "bool":
+            return (utils.to_bool, 1)
+        case "s8":
+            return (utils.to_s8, 1)
+        case "u8":
+            return (utils.to_u8, 1)
+        case "s16":
+            return (utils.to_s16, 2)
+        case "u32":
+            return (utils.to_u32, 4)
+        case _:
+            print(f"Failed to find parser for {dataType}")
+
 def serialize_asset(content: str, asset_config:str) -> bytearray:
     obj = json.loads(content)
     config = json.loads(asset_config)
@@ -36,12 +54,12 @@ def serialize_asset(content: str, asset_config:str) -> bytearray:
         for entry, entryType in config.items():
             serializer = get_serializer(entryType)
             serialized_data += serializer(item[entry])
-    print(serialized_data)
     expected_data_size = item_count * item_size
+    print(len(serialized_data))
+    print(expected_data_size)
     assert len(serialized_data) == expected_data_size
 
     return serialized_data
-
 
 class PSXSegAssets(N64Segment):
     def __init__(self, rom_start, rom_end, type, name, vram_start, args, yaml):
@@ -74,7 +92,10 @@ class PSXSegAssets(N64Segment):
                 f"data for '{self.name}' is {expected_data_size - len(data)} too long. Data might look incorrect.",
                 status="warn",
             )
-
+        config_file_name = f"tools/splat_ext/{self.name}_config.json"
+        with open(config_file_name,"r") as config_in:
+            config_json = config_in.read()
+        config = json.loads(config_json)
         items = []
         for i in range(0, count):
             item_data = data[i * item_size :][:item_size]
@@ -88,38 +109,13 @@ class PSXSegAssets(N64Segment):
                 ),
                 "desc_resolved": utils.sotn_menu_desc_to_str(
                     get_ptr_data(item_data[0x04:])
-                ),
-                # debugging stuff ends
-                "name_addr": utils.to_ptr_str(item_data[0x00:]),
-                "desc_addr": utils.to_ptr_str(item_data[0x04:]),
-                "attack": utils.to_s16(item_data[0x08:]),
-                "defense": utils.to_s16(item_data[0x0A:]),
-                "element": utils.to_u16(item_data[0x0C:]),
-                "itemCategory": utils.to_u8(item_data[0x0E:]),
-                "weaponId": utils.to_u8(item_data[0x0F:]),
-                "palette": utils.to_u8(item_data[0x10:]),
-                "unk11": utils.to_u8(item_data[0x11:]),
-                "playerAnim": utils.to_u8(item_data[0x12:]),
-                "unk13": utils.to_u8(item_data[0x13:]),
-                "unk14": utils.to_u8(item_data[0x14:]),
-                "lockDuration": utils.to_u8(item_data[0x15:]),
-                "chainLimit": utils.to_u8(item_data[0x16:]),
-                "unk17": utils.to_u8(item_data[0x17:]),
-                "specialMove": utils.to_u8(item_data[0x18:]),
-                "isConsumable": utils.to_bool(item_data[0x19:]),
-                "enemyInvincibilityFrames": utils.to_u8(item_data[0x1A:]),
-                "unk1B": utils.to_u8(item_data[0x1B:]),
-                "unk1C": utils.to_u32(item_data[0x1C:]),
-                "unk20": utils.to_u32(item_data[0x20:]),
-                "mpUsage": utils.to_u16(item_data[0x24:]),
-                "stunFrames": utils.to_u16(item_data[0x26:]),
-                "hitType": utils.to_u16(item_data[0x28:]),
-                "hitEffect": utils.to_u16(item_data[0x2A:]),
-                "icon": utils.to_u16(item_data[0x2C:]),
-                "iconPalette": utils.to_u16(item_data[0x2E:]),
-                "criticalRate": utils.to_u16(item_data[0x30:]),
-                "unk32": utils.to_u16(item_data[0x32:]),
+                )
             }
+            data_pointer = 0
+            for entry, entryType in config.items():
+                parser, dataSizeBytes = get_parser_and_size(entryType)
+                item[entry] = parser(item_data[data_pointer:])
+                data_pointer += dataSizeBytes
             items.append(item)
         return items
 
