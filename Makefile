@@ -331,10 +331,10 @@ context:
 	$(M2CTX) $(SOURCE)
 	@echo ctx.c has been updated.
 
-#Creates a page on decomp.me for a function by name. For example, `make decompme func_80101234`.
-# Strange pattern at the end passes argument of make command onward to the python script
+# Creates a page on decomp.me for a function by name. For example, `make decompme f=func_80101234`.
+# Must use "f={function}" syntax with explicitly f= to pass variable. 
 decompme:
-	$(PYTHON) tools/make_decompme.py $(filter-out $@,$(MAKECMDGOALS))
+	$(PYTHON) tools/make_decompme.py $(f)
 
 extract_disk: extract_disk_$(VERSION)
 disk_prepare: build $(SOTNDISK)

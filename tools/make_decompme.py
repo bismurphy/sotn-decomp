@@ -3,25 +3,21 @@ import argparse
 from pathlib import Path
 import os
 import re
+import sys
+import decompile as local_decompile
+# decomp-permuter has a hyphen in the name which is not valid in normal import statements.
+# Need to do it a roundabout way:
+import importlib
+sys.path.append("tools/decomp-permuter")
+permuter_import = importlib.import_module("decomp-permuter.import")
+sys.path.remove("tools/decomp-permuter")
+# done with importing 
 
 def parse_func_name(func_name):
     # Built a list of tuples. Element 0 is function name, Element 1 is file path
     functions = [(s.stem,str(s)) for s in Path("asm").rglob("*.s") if "nonmatchings" in str(s)]
     matches = [x for x in functions if x[0] == func_name]
-    if len(matches) == 0:
-        print(f"Unable to find function `{func_name}`")
-        exit(1)
-    if len(matches) > 1:
-        print(f"Found multiple functions called `{func_name}`")
-        print(f"You will need to specify which function you want.")
-        print(f"=================================================")
-        for i,match in enumerate(matches):
-            print(f"{i}:{match[1]}")
-        print(f"=================================================")
-        choice_num = int(input("Enter the number matching which function you want here: "))
-        return matches[choice_num][1]
-    if len(matches) == 1:
-        return matches[0][1]
+    return matches
     
 def get_c_filename(asm_filename):
     assert "asm/us" in asm_filename and "/nonmatchings/" in asm_filename
@@ -42,8 +38,6 @@ def resolve_jumptable(asm_filename):
             # looking for a line with a jr, but not with $ra
             if 'jr' not in line or '$ra' in line:
                 continue
-            print("bingbong")
-            print(line)
             jumpreg = line.split()[-1]
             if 'nop' not in lines[i-1]:
                 exit(1)
@@ -86,13 +80,27 @@ if __name__ == "__main__":
         help="Name of function to create a decomp.me page for",
     )
     args = parser.parse_args()
-    asm_filename = parse_func_name(args.func_name)
+    # Find all functions in the repo which match the given name
+    matching_functions = parse_func_name(args.func_name)
+    if len(matching_functions) == 0:
+        print(f"Unable to find function `{args.func_name}`")
+        exit(1)
+    if len(matching_functions) > 1:
+        print(f"Found multiple functions called `{args.func_name}`")
+        print(f"You will need to specify which function you want.")
+        print(f"=================================================")
+        for i,match in enumerate(matching_functions):
+            print(f"{i}:{match[1]}")
+        print(f"=================================================")
+        choice_num = int(input("Enter the number matching which function you want here: "))
+    if len(matching_functions) == 1:
+        choice_num = 0
+
+    asm_filename = matching_functions[choice_num][1]
     print(asm_filename)
     c_filename = get_c_filename(asm_filename)
     # Function is found. Now resolve any jump tables by appending rodata
     resolve_jumptable(asm_filename)
     # Decompile function locally. 
-
-    import_string = f'tools/decomp-permuter/import.py {c_filename} {asm_filename}'
-    print(f"Calling {import_string}")
-    os.system(import_string)
+    local_decompile.decompile(args.func_name, number_occurrence=choice_num)
+    permuter_import.main([c_filename, asm_filename, "--decompme"])
