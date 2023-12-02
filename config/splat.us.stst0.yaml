@@ -1,0 +1,71 @@
+options:
+  platform:     psx
+  basename:     stst0
+  base_path:    ..
+  build_path:   build/us
+  target_path:  disks/us/ST/ST0/ST0.BIN
+  asm_path:     asm/us/st/st0
+  asset_path:   assets/st/st0
+  src_path:     src/st/st0
+  ld_script_path: build/us/stst0.ld
+  compiler:     GCC
+  symbol_addrs_path:    config/generated.symbols.us.stst0.txt
+  undefined_funcs_auto_path: config/undefined_funcs_auto.us.stst0.txt
+  undefined_syms_auto_path:  config/undefined_syms_auto.us.stst0.txt
+  find_file_boundaries: yes
+  use_legacy_include_asm: no
+  migrate_rodata_to_functions: no
+  asm_jtbl_label_macro: jlabel
+  extensions_path: tools/splat_ext
+  section_order:
+    - ".data"
+    - ".rodata"
+    - ".text"
+    - ".sbss"
+segments:
+  - name: stst0
+    type: code
+    start: 0x00000000
+    vram:  0x80180000
+    subalign: 4
+    subsegments:
+      - [0x0, data]
+      - [0x580, data]
+      - [0x770, data]
+      - [0x990, data]
+      - [0xAB0, data]
+      - [0x2060, roomdef, g_Rooms]
+      - [0x2084, data]
+      #- [0x3D1C, cmp]
+      - [0x487C, data]
+      #- [0x17F80, cmp]
+      - [0x187BC, data]
+      #- [0x1A40C, cmp]
+      - [0x1A750, data]
+      - [0x27984, .rodata, 27D64]
+      - [0x279E8, rodata]
+      - [0x27A74, .rodata, 28BF8] # EntityCutscene
+      - [0x27AB4, .rodata, 2A8DC] # EntitySecretButton
+      - [0x27ACC, .rodata, 2A8DC] # EntitySecretStairs
+      - [0x27AE0, .rodata, 2B0C8] # EntityStageTitleFadeout
+      - [0x27B00, .rodata, 2B0C8] # EntityStageTitleCard
+      - [0x27B18, rodata]
+      - [0x27B40, .rodata, 2C564] # EntityDracula
+      - [0x27B7C, rodata]
+      - [0x27BFC, rodata]
+      - [0x27C8C, .rodata, 36358]
+      - [0x27CAC, rodata]
+      - [0x27CC4, rodata]
+      - [0x27D64, c]
+      - [0x28BF8, c] # Dracula Cutscene
+      - [0x2A8DC, c]
+      - [0x2B0C8, c]
+      - [0x2C564, c] # EntityDracula
+      - [0x30030, c]
+      - [0x3186C, c, random]
+      - [0x3189C, c, update]
+      - [0x31B98, c, update_stage_entities]
+      - [0x31CA0, c]
+      - [0x36358, c]
+      - [0x3EB00, sbss]
+  - [0x425C4]

@@ -1,0 +1,21 @@
+pre-commit
+black
+pycparser
+watchdog
+tqdm
+intervaltree
+colorama
+python-Levenshtein
+cxxfilt
+mapfile-parser==2.1.4
+tabulate
+requests
+graphviz
+# splat
+spimdisasm==1.18.0
+rabbitizer==1.7.0
+n64img==0.3.3
+PyYAML
+pylibyaml
+pygfxd
+pillow

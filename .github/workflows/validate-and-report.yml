@@ -1,0 +1,221 @@
+name: Build PSX version
+
+on:
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - '*.md'
+      - '**/*.md'
+  pull_request_target:
+    paths-ignore:
+      - '.github/workflows/**'
+      - '*.md'
+      - '**/*.md'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.ref }}-${{ github.job }}-${{ github.event_name }}-${{ github.number }}
+  cancel-in-progress: false
+
+jobs:
+  build-and-test:
+    strategy:
+      matrix:
+        version: ["us", "hd"]
+        include:
+          - dependency: us
+            version: us
+          - dependency: pspeu
+            version: hd
+    # Building and testing cannot work if the repository owner is not Xeeynamo
+    # due to the missing secrets to clone the CI dependencies
+    if: github.repository == 'Xeeynamo/sotn-decomp'
+    runs-on: ubuntu-latest
+    env:
+      VERSION: ${{ matrix.version }}
+    steps:
+      - name: Install requirements
+        run: sudo apt-get install gcc-mipsel-linux-gnu
+      - name: Clone main repo (PR)
+        if: github.event_name == 'pull_request_target'
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          submodules: false
+      - name: Clone main repo
+        if: github.event_name != 'pull_request_target'
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.ref }}
+          submodules: false
+      - name: Get dependencies
+        uses: actions/cache@v3
+        id: get-dependencies
+        with:
+          path: 'disks/dependencies'
+          key: sotn-${{ matrix.dependency }}-deps
+      - name: Get dependencies (uncached)
+        if: steps.get-dependencies.outputs.cache-hit != 'true'
+        uses: actions/checkout@v3
+        with:
+          repository: xeeynamo/sotn-decomp-dependencies
+          ref: ${{ matrix.dependency }}
+          token: ${{ secrets.SOTN_DECOMP_DEPENDENCIES_TOKEN }}
+          path: 'disks/dependencies'
+      - name: Cache dependencies
+        if: steps.get-dependencies.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v3
+        with:
+          path: 'disks/dependencies'
+          key: sotn-${{ matrix.dependency }}-deps
+      - name: Setting up dependencies
+        working-directory: disks
+        run: |
+          cat dependencies/* > dependencies.tar.gz
+          tar -xf dependencies.tar.gz
+          mv *.cue sotn.${{ matrix.dependency }}.cue || mv *.iso sotn.${{ matrix.dependency }}.iso
+      - name: Extract dependencies
+        run: make extract_disk
+      - name: Split game data
+        run: make -j extract
+      - name: Build binaries
+        run: make -j build
+      - name: Check if they match
+        run: make check
+      - name: Analyze calls dry run
+        if: matrix.version == 'us'
+        run: |
+          make force_extract
+          ./tools/analyze_calls.py --ultradry
+      - name: Remove clutter from build folder
+        run: rm -rf build/${{ matrix.version }}/asm build/${{ matrix.version }}/src build/${{ matrix.version }}/assets
+      - name: Export build folder
+        if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+        uses: actions/upload-artifact@v3
+        with:
+          name: build_${{ matrix.version }}
+          path: build/${{ matrix.version }}
+
+  generate-progress-report:
+    strategy:
+      matrix:
+        version: ["us", "hd"]
+        include:
+          - dependency: us
+            version: us
+          - dependency: pspeu
+            version: hd
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    env:
+      VERSION: ${{ matrix.version }}
+      FROGRESS_API_BASE_URL: ${{ secrets.FROGRESS_API_BASE_URL }}
+      FROGRESS_API_SECRET: ${{ secrets.FROGRESS_API_SECRET }}
+      DISCORD_PROGRESS_WEBHOOK: ${{ secrets.DISCORD_PROGRESS_WEBHOOK }}
+    steps:
+      - name: Clone main repository
+        uses: actions/checkout@v3
+        with:
+          submodules: false
+      - name: Get dependencies
+        uses: actions/cache@v3
+        with:
+          path: 'disks/dependencies'
+          key: sotn-${{ matrix.dependency }}-deps
+      - name: Setting up dependencies
+        working-directory: disks
+        run: |
+          cat dependencies/* > dependencies.tar.gz
+          tar -xf dependencies.tar.gz
+          mv *.cue sotn.${{ matrix.dependency }}.cue || mv *.iso sotn.${{ matrix.dependency }}.iso
+      - name: Extract dependencies
+        run: make extract_disk
+      - name: Split game data
+        run: make -j extract
+      - name: Obtain built binaries
+        uses: actions/download-artifact@v3
+        with:
+          name: build_${{ matrix.version }}
+          path: build/${{ matrix.version }}
+      - name: Generate and send progress report
+        run: python3 tools/progress.py --version ${{ matrix.version }}
+
+  generate-duplicates-report:
+    strategy:
+      matrix:
+        version: ["us"]
+        include:
+          - dependency: us
+            version: us
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    env:
+      VERSION: ${{ matrix.version }}
+    steps:
+      - name: Clone main repository
+        uses: actions/checkout@v3
+        with:
+          submodules: false
+      - name: Get dependencies
+        uses: actions/cache@v3
+        with:
+          path: 'disks/dependencies'
+          key: sotn-${{ matrix.dependency }}-deps
+      - name: Setting up dependencies
+        working-directory: disks
+        run: |
+          cat dependencies/* > dependencies.tar.gz
+          tar -xf dependencies.tar.gz
+          mv *.cue sotn.${{ matrix.dependency }}.cue || mv *.iso sotn.${{ matrix.dependency }}.iso
+      - name: Extract dependencies
+        run: make extract_disk
+      - name: Obtain built binaries
+        uses: actions/download-artifact@v3
+        with:
+          name: build_${{ matrix.version }}
+          path: build/${{ matrix.version }}
+      - name: Clone asset repository
+        uses: actions/checkout@v3
+        with:
+          ref: 'gh-duplicates'
+          path: 'gh-duplicates'
+      - name: Set-up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+      - name: Install secondary pre-requirements
+        run: |
+            pip3 install -r tools/requirements-python.txt & \
+            (sudo apt-get update && sudo apt-get install graphviz) & \
+            wait
+      - name: Generate function calls chart
+        run: |
+            make force_symbols
+            make force_extract
+            python3 tools/analyze_calls.py
+            git clean -fdx asm/ 
+      - name: Generate function report
+        run: |
+            git checkout config/
+            make -j extract
+            python3 tools/function_finder/function_finder_psx.py --use-call-trees > gh-duplicates/functions.md
+            rm -rf gh-duplicates/function_calls/ || true
+            mv function_calls gh-duplicates/
+            mv function_graphs.md gh-duplicates
+      - name: Generate duplicates report
+        run: |
+          make force_symbols
+          make force_extract
+          cd tools/dups
+          cargo run --release -- --threshold .90 --output-file ../../gh-duplicates/duplicates.txt
+      - name: Commit all reports
+        run: |
+            git config --global user.name 'GitHub Action' 
+            git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add -A
+            git commit -m 'Update reports' || true
+            git push
+        working-directory: gh-duplicates

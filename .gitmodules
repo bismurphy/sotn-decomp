@@ -1,0 +1,15 @@
+[submodule "tools/n64splat"]
+	path = tools/n64splat
+	url = https://github.com/ethteck/splat.git
+[submodule "tools/asm-differ"]
+	path = tools/asm-differ
+	url = https://github.com/simonlindholm/asm-differ.git
+[submodule "tools/m2c"]
+	path = tools/m2c
+	url = https://github.com/matt-kempster/m2c.git
+[submodule "tools/saturn-splitter"]
+	path = tools/saturn-splitter
+	url = https://github.com/sozud/saturn-splitter.git
+[submodule "tools/maspsx"]
+	path = tools/maspsx
+	url = https://github.com/mkst/maspsx.git

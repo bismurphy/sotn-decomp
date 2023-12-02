@@ -1,0 +1,78 @@
+options:
+  platform:     psx
+  basename:     stmad
+  base_path:    ..
+  build_path:   build/us
+  target_path:  disks/us/ST/MAD/MAD.BIN
+  asm_path:     asm/us/st/mad
+  asset_path:   assets/st/mad
+  src_path:     src/st/mad
+  ld_script_path: build/us/stmad.ld
+  compiler:     GCC
+  symbol_addrs_path:    config/generated.symbols.stmad.txt
+  undefined_funcs_auto_path: config/undefined_funcs_auto.stmad.txt
+  undefined_syms_auto_path:  config/undefined_syms_auto.stmad.txt
+  find_file_boundaries: yes
+  use_legacy_include_asm: no
+  migrate_rodata_to_functions: no
+  asm_jtbl_label_macro: jlabel
+  extensions_path: tools/splat_ext
+  string_encoding: SHIFT-JIS
+  section_order:
+    - ".data"
+    - ".rodata"
+    - ".text"
+    - ".bss"
+segments:
+  - name: stmad
+    type: code
+    start: 0x00000000
+    vram:  0x80180000
+    subalign: 2
+    subsegments:
+      - [0x0, data]
+      - [0xE40, data]
+      - [0xEF8, .data, entity_relic_orb]
+      - [0xF5C, data]
+      - [0x1130, roomdef, g_Rooms]
+      - [0x11D4, data] # assets/st/mad/0.objlayout
+      # - [0x11E8, data] # assets/st/mad/1.objlayout
+      # - [0x1206, data] # assets/st/mad/2.objlayout
+      # - [0x12B0, data] # assets/st/mad/3.objlayout
+      # - [0x135A, data] # assets/st/mad/4.objlayout
+      # - [0x1404, data] # assets/st/mad/5.objlayout
+      # - [0x14AE, data] # assets/st/mad/6.objlayout
+      # - [0x1558, data] # assets/st/mad/7.objlayout
+      # - [0x1602, data] # assets/st/mad/8.objlayout
+      # - [0x16AC, data] # assets/st/mad/9.objlayout
+      # - [0x1756, data] # assets/st/mad/10.objlayout
+      # - [0x1774, data] # assets/st/mad/11.objlayout
+      # - [0x1788, data] # assets/st/mad/12.objlayout
+      # - [0x17A6, data] # assets/st/mad/13.objlayout
+      # - [0x1850, data] # assets/st/mad/14.objlayout
+      # - [0x18FA, data] # assets/st/mad/15.objlayout
+      # - [0x19A4, data] # assets/st/mad/16.objlayout
+      # - [0x1A4E, data] # assets/st/mad/17.objlayout
+      # - [0x1AF8, data] # assets/st/mad/18.objlayout
+      # - [0x1BA2, data] # assets/st/mad/19.objlayout
+      # - [0x1C4C, data] # assets/st/mad/20.objlayout
+      # - [0x1CF6, data] # assets/st/mad/21.objlayout
+      - [0x1404, data]
+      - [0x1774, data]
+      - [0x19A4, data]
+      - [0x1D14, data]
+      - [0xD794, rodata]
+      - [0xD83C, .rodata, 139E0]
+      - [0xD85C, rodata] # EntityEquipItemDrop
+      - [0xD874, .rodata, entity_relic_orb]
+      - [0xD8AC, rodata]
+      - [0xD8C8, c]
+      - [0xE964, c, random]
+      - [0xE994, c, update]
+      - [0xEC90, c, CollectGold]
+      - [0xEDB8, c]
+      - [0x139E0, c]
+      - [0x149C0, c, entity_relic_orb]
+      - [0x15520, c]
+      - [0x197D8, sbss]
+  - [0x19E94]

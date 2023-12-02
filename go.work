@@ -1,0 +1,5 @@
+go 1.19
+
+use ./tools/gfxsotn
+
+use ./tools/sotn-disk
