@@ -15,7 +15,7 @@ MWCCGAP         := $(PYTHON) $(MWCCGAP_APP)
 
 PSP_BUILD_DIR   := build/pspeu
 CCPSP           := MWCIncludes=bin/ $(WIBO) $(MWCCPSP)
-PSP_EU_TARGETS  := tt_000 w0_041
+PSP_EU_TARGETS  := w0_041
 SPLAT_PIP       := splat split
 
 MWCCPSP_FLAGS   := -gccinc -Iinclude -D_internal_version_$(VERSION) -O0 -c -lang c -sdatathreshold 0
@@ -31,7 +31,7 @@ define list_o_files_psp
 	$(foreach file,$(call list_src_files_psp,$(1)),$(PSP_BUILD_DIR)/$(file).o)
 endef
 
-build_pspeu: tt_000_psp w0_041_psp
+build_pspeu: w0_041_psp
 
 extract_pspeu: $(addprefix $(PSP_BUILD_DIR)/,$(addsuffix .ld,$(PSP_EU_TARGETS)))
 
@@ -59,7 +59,7 @@ $(PSP_BUILD_DIR)/asm/psp%.s.o: asm/psp%.s
 	$(ASPSP) -o $@ $<
 
 
-$(PSP_BUILD_DIR)/assets/servant/tt_000/header.bin.o: assets/servant/tt_000/header.bin
+$(PSP_BUILD_DIR)/assets/%/header.bin.o: assets/%/header.bin
 	mkdir -p $(dir $@)
 	mipsel-linux-gnu-ld -r -b binary -o $@ $<
 
@@ -72,11 +72,11 @@ $(PSP_BUILD_DIR)/tt_%.ld: $(CONFIG_DIR)/splat.pspeu.tt_%.yaml $(PSX_BASE_SYMS) $
 $(PSP_BUILD_DIR)/tt_%.elf: $(PSP_BUILD_DIR)/tt_%.ld $$(call list_o_files_psp,servant/tt_$$*)
 	$(call link,tt_$*,$@)
 
-w0_041_psp: $(PSP_BUILD_DIR)/w0_041.bin $(PSP_BUILD_DIR)/assets/servant/w0_041/header.bin.o
+w0_041_psp: $(PSP_BUILD_DIR)/w0_041.bin $(PSP_BUILD_DIR)/assets/weapon/w0_041/header.bin.o
 
 $(PSP_BUILD_DIR)/w0_%.bin: $(PSP_BUILD_DIR)/w0_%.elf
 	$(OBJCOPY) -O binary $< $@
 $(PSP_BUILD_DIR)/w0_%.ld: $(CONFIG_DIR)/splat.pspeu.w0_%.yaml $(PSX_BASE_SYMS) $(CONFIG_DIR)/symbols.pspeu.w0_%.txt
 	$(SPLAT_PIP) $<
-$(PSP_BUILD_DIR)/w0_%.elf: $(PSP_BUILD_DIR)/w0_%.ld $$(call list_o_files_psp,servant/w0_$$*)
+$(PSP_BUILD_DIR)/w0_%.elf: $(PSP_BUILD_DIR)/w0_%.ld $$(call list_o_files_psp,weapon/w0_$$*)
 	$(call link,w0_$*,$@)
