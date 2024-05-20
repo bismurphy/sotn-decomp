@@ -48,8 +48,10 @@ $(MWCCGAP_APP):
 $(PSP_BUILD_DIR)/%.c.o: %.c $(MWCCPSP) $(MWCCGAP_APP)
 	mkdir -p $(dir $@)
 	if grep -q INCLUDE_ASM $<; then \
+		echo "Cowabunga" && \
 		$(MWCCGAP) $< $@ --mwcc-path $(MWCCPSP) --use-wibo --wibo-path $(WIBO) --asm-dir-prefix asm/pspeu $(MWCCPSP_FLAGS) ; \
 	else \
+		echo "Pigabunga" && \
 		$(CCPSP) $< -o $@ $(MWCCPSP_FLAGS) ; \
 	fi
 
