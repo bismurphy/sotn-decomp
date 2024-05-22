@@ -1,1 +1,4 @@
-CreateEntFactoryFromEntity = 0x92BE6F0;
+DestroyEntity = 0x92ACF18;
+func_8015CAD4 = 0x92B10D0;
+func_8015FA5C = 0x92BE6F0;
+CreateEntFactoryFromEntity = 0x92BF628;
