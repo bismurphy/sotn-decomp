@@ -215,7 +215,7 @@ def adjust_include_asm(c_file, version):
 if __name__ == "__main__":
     print("Starting")
     version = "pspeu"
-    ovl_input = "disks/pspeu/PSP_GAME/USRDIR/res/ps/PSPBIN/ric.bin"
+    ovl_input = "disks/ric.bin"
     splat_config_path = make_config(ovl_input, version)
     with open(splat_config_path) as f:
         splat_config = yaml.load(f, Loader=yaml.SafeLoader)
