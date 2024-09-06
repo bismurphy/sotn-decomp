@@ -1,4 +1,6 @@
-#include <game.h>
+// SPDX-License-Identifier: AGPL-3.0-only
+#include "common.h"
+#include "game.h"
 
 ButtonComboState g_bladeDashButtons;
 ButtonComboState D_801758E4;
