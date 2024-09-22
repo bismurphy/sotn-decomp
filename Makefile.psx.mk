@@ -4,7 +4,7 @@ PSXCC_FLAGS     := -quiet -mcpu=3000 -fgnu-linker -mgas -gcoff
 
 # configuration
 PSX_OVLS		:= dra ric weapon
-PSX_KSTAGES		:= cen dre mad no3 np3 nz0 sel st0 wrp
+PSX_KSTAGES		:= cen dre mad no0 no3 np3 nz0 sel st0 wrp
 PSX_RSTAGES		:= rwrp
 PSX_BOSTAGES    := mar
 PSX_ALLSTAGES	:= $(addprefix st,$(PSX_KSTAGES)) $(addprefix st,$(PSX_RSTAGES)) $(addprefix bo,$(PSX_BOSTAGES))
@@ -87,6 +87,7 @@ extract_assets: $(SOTNASSETS)
 	cd tools/sotn-assets; $(GO) install
 	$(SOTNASSETS) stage extract -stage_ovl disks/$(VERSION)/ST/CEN/CEN.BIN -o assets/st/cen
 	$(SOTNASSETS) stage extract -stage_ovl disks/$(VERSION)/ST/DRE/DRE.BIN -o assets/st/dre
+	$(SOTNASSETS) stage extract -stage_ovl disks/$(VERSION)/ST/NO0/NO0.BIN -o assets/st/no0
 	$(SOTNASSETS) stage extract -stage_ovl disks/$(VERSION)/ST/NO3/NO3.BIN -o assets/st/no3
 	$(SOTNASSETS) stage extract -stage_ovl disks/$(VERSION)/ST/NP3/NP3.BIN -o assets/st/np3
 	$(SOTNASSETS) stage extract -stage_ovl disks/$(VERSION)/ST/NZ0/NZ0.BIN -o assets/st/nz0
@@ -101,6 +102,7 @@ extract_assets_hd: $(SOTNASSETS)
 build_assets: $(SOTNASSETS)
 	$(SOTNASSETS) stage build_all -i assets/st/cen -o src/st/cen/
 	$(SOTNASSETS) stage build_all -i assets/st/dre -o src/st/dre/
+	$(SOTNASSETS) stage build_all -i assets/st/no0 -o src/st/no0/
 	$(SOTNASSETS) stage build_all -i assets/st/no3 -o src/st/no3/
 	$(SOTNASSETS) stage build_all -i assets/st/np3 -o src/st/np3/
 	$(SOTNASSETS) stage build_all -i assets/st/nz0 -o src/st/nz0/
