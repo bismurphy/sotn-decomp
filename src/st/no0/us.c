@@ -28,33 +28,33 @@ INCLUDE_ASM("st/no0/nonmatchings/us", func_us_801C2E7C);
 
 INCLUDE_ASM("st/no0/nonmatchings/us", func_us_801C3308);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", MakeExplosions);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8019055C);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", EntityWargExplosionPuffOpaque);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_801B3C38);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", Random);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_801881E8);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", Update);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_80188218);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", UpdateStageEntities);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_80188514);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", HitDetection);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018861C);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", EntityDamageDisplay);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_80189734);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", CreateEntityFromLayout);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_80189DD8);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", CreateEntityWhenInHorizontalRange);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_80189FB4);
 
 INCLUDE_ASM("st/no0/nonmatchings/us", func_us_801C5554);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", FindFirstEntityAbove);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018A380);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", FindFirstEntityBelow);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018A3CC);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", CreateEntitiesAbove);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018A424);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", CreateEntitiesBelow);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018A520);
 
 INCLUDE_ASM("st/no0/nonmatchings/us", func_us_801C5920);
 
@@ -64,109 +64,109 @@ INCLUDE_ASM("st/no0/nonmatchings/us", func_us_801C59C4);
 
 INCLUDE_ASM("st/no0/nonmatchings/us", func_us_801C5AC0);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", InitRoomEntities);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018A634);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", UpdateRoomPosition);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018A7AC);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", CreateEntityFromCurrentEntity);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018A860);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", CreateEntityFromEntity);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018A8D4);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", EntityIsNearPlayer);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018A950);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", EntityRedDoor);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018A9C8);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", EntityRoomForeground);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_80192E54);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", BottomCornerText);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_80192F40);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", EntitySoulStealOrb);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_80192610);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", EntityEnemyBlood);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_801929A4);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", DestroyEntity);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018B600);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", DestroyEntitiesFromIndex);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018B66C);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", PreventEntityFromRespawning);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018B6E8);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", AnimateEntity);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018B730);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", UnkAnimFunc);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018B7E8);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", GetDistanceToPlayerX);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018B900);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", GetDistanceToPlayerY);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018B93C);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", GetSideToPlayer);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018B970);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", MoveEntity);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018B9B4);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", FallEntity);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018B9E4);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", UnkCollisionFunc3);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018BA10);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", UnkCollisionFunc2);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018BC88);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", AllocEntity);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018BE70);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", GetSineScaled);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018BED0);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", GetSine);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018BEFC);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", SetEntityVelocityFromAngle);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018BF18);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", Ratan2Shifted);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018BF84);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", GetAngleBetweenEntitiesShifted);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018BFBC);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", GetAnglePointToEntity);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018C198);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", AdjustValueWithinThreshold);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018C04C);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", UnkEntityFunc0);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018C0A4);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", Ratan2);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018C130);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", GetAngleBetweenEntities);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018C160);
 
 INCLUDE_ASM("st/no0/nonmatchings/us", func_us_801C8398);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", GetNormalizedAngle);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018C1E0);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", SetStep);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018C240);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", SetSubStep);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018C260);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", EntityExplosionSpawn);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018C27C);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", InitializeEntity);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018C310);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", EntityDummy);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018C40C);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", UnkCollisionFunc);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018C434);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", CheckFieldCollision);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018C55C);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", GetPlayerCollisionWith);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018C6B4);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", ReplaceBreakableWithItemDrop);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018C9F8);
 
 INCLUDE_ASM("st/no0/nonmatchings/us", func_8018CAB0);
 
 INCLUDE_ASM("st/no0/nonmatchings/us", func_8018CB34);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", CollectHeart);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018CC90);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", CollectGold);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018CD10);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", CollectSubweapon);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018CDEC);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", CollectHeartVessel);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018CF04);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", CollectLifeVessel);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018CFA8);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", DestroyCurrentEntity);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018CFF8);
 
 INCLUDE_RODATA("st/no0/nonmatchings/us", D_us_801C1394);
 
@@ -188,53 +188,53 @@ INCLUDE_RODATA("st/no0/nonmatchings/us", D_us_801C13D4);
 
 INCLUDE_RODATA("st/no0/nonmatchings/us", D_us_801C13DC);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", EntityPrizeDrop);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018D020);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", EntityExplosion);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018D894);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", BlinkItem);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018D990);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", EntityEquipItemDrop);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018DA34);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", BlitChar);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018E01C);
 
 INCLUDE_RODATA("st/no0/nonmatchings/us", D_us_801C141C);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", EntityRelicOrb);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018E2CC);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", EntityHeartDrop);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018ED9C);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", EntityMessageBox);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018EEC4);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", CheckColliderOffsets);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018F420);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", EntityUnkId13);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018F510);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", EntityUnkId14Spawner);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018F620);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", EntityUnkId15Spawner);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018F750);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", EntityUnkId14);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018F838);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", EntityUnkId15);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018F928);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", EntityOlroxDrool);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018FA1C);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", UnkCollisionFunc5);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8018FC4C);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", EntityIntenseExplosion);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_801902C8);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", InitializeUnkEntity);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_801903C8);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", MakeEntityFromId);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_80190494);
 
 INCLUDE_ASM("st/no0/nonmatchings/us", func_us_801CC1D0);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", EntityBigRedFireball);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_80190614);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", ClutLerp);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_801914CC);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", PlaySfxPositional);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_801916C4);
 
 INCLUDE_ASM("st/no0/nonmatchings/us", func_us_801CC750);
 
@@ -269,11 +269,11 @@ void func_us_801CE2D8(void) {
 
 INCLUDE_ASM("st/no0/nonmatchings/us", func_us_801CE2E0);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", StageNamePopupHelper);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_801917BC);
 
 INCLUDE_RODATA("st/no0/nonmatchings/us", D_us_801C14A8);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", EntityStageNamePopup);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_8019198C);
 
 INCLUDE_ASM("st/no0/nonmatchings/us", func_us_801CF4A8);
 
@@ -351,9 +351,9 @@ INCLUDE_ASM("st/no0/nonmatchings/us", func_us_801D66F8);
 
 INCLUDE_ASM("st/no0/nonmatchings/us", func_us_801D75E4);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", EntitySkeleton);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_801C5FC4);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", EntitySkeletonPieces);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_801C6494);
 
 INCLUDE_ASM("st/no0/nonmatchings/us", func_us_801D7C20);
 
@@ -383,11 +383,11 @@ INCLUDE_ASM("st/no0/nonmatchings/us", func_801C4198);
 
 INCLUDE_ASM("st/no0/nonmatchings/us", func_801C4550);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", EntityAxeKnight);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_801C45BC);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", EntityAxeKnightRotateAxe);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_801C4CC0);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", EntityAxeKnightThrowingAxe);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_801C4D18);
 
 INCLUDE_ASM("st/no0/nonmatchings/us", func_us_801DBDCC);
 
@@ -399,36 +399,36 @@ INCLUDE_ASM("st/no0/nonmatchings/us", func_us_801DC754);
 
 INCLUDE_ASM("st/no0/nonmatchings/us", func_us_801DC788);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", SkeletonAttackCheck);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_801C5F2C);
 
 INCLUDE_ASM("st/no0/nonmatchings/us", func_us_801DCB48);
 
 INCLUDE_ASM("st/no0/nonmatchings/us", func_us_801DD018);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", EntitySkeletonThrownBone);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_801C6574);
 
 INCLUDE_ASM("st/no0/nonmatchings/us", func_801C6678);
 
 INCLUDE_ASM("st/no0/nonmatchings/us", func_us_801DD2B0);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", EntityMagicallySealedDoor);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_801C7D68);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", UnkPrimHelper);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_80193270);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", UpdateAnimation);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_80193658);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", FindFirstUnkPrim);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_801937A8);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", FindFirstUnkPrim2);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_801937D8);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", PrimToggleVisibility);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_80193854);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", PrimResetNext);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_801938DC);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", UnkPolyFunc2);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_801939BC);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", UnkPolyFunc0);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_80193A10);
 
-INCLUDE_ASM("st/no0/nonmatchings/us", PrimDecreaseBrightness);
+INCLUDE_ASM("st/no0/nonmatchings/us", func_80193A3C);
 
-INCLUDE_RODATA("st/no0/nonmatchings/us", g_UnkPrimHelperRot);
+INCLUDE_RODATA("st/no0/nonmatchings/us", D_us_801C184C);
