@@ -140,7 +140,6 @@ void func_8010E7AC(void) {
     if (g_Player.prev_step != Player_Walk) {
         SetPlayerAnim(28);
     }
-
     PLAYER.velocityX = 0;
     PLAYER.velocityY = FIX(2);
     g_Player.timers[ALU_T_6] = 8;
