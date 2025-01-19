@@ -599,7 +599,6 @@ block_45:
         PLAYER.step_s = 0x51;
         PlaySfx(SFX_VO_ALU_PAIN_A);
         return true;
-
     case 12: // Shotel
         // When shotel is thrown away, attempting to attack will make a punch
         if (CheckChainLimit(equipped_item->specialMove, hand) >= 0 &&
