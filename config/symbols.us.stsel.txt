@@ -1,0 +1,12 @@
+SEL_g_EntityGfxs = 0x80180760;
+g_Streams = 0x8018B2EC;
+SEL_EntityCutscene = 0x801B69F8;
+StreamDiskIsReady = 0x801B9744;
+StreamNextVlc = 0x801B988C;
+func_801BAB70 = 0x801BAB70;
+DecDCTvlc = 0x801BABA4;
+g_StreamEndFrame = 0x801BD034;
+g_StreamIsRGB24 = 0x801BD038;
+g_StreamRewindSwitch = 0x801BD044;
+g_StreamImageBuffer = 0x801BD048;
+g_StreamEnv = 0x801D6A4C;

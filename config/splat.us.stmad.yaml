@@ -1,0 +1,100 @@
+options:
+  platform:     psx
+  basename:     stmad
+  base_path:    ..
+  build_path:   build/us
+  target_path:  disks/us/ST/MAD/MAD.BIN
+  asm_path:     asm/us/st/mad
+  asset_path:   assets/st/mad
+  src_path:     src/st/mad
+  ld_script_path: build/us/stmad.ld
+  compiler:     GCC
+  symbol_addrs_path:
+    # NOTE: shifted overlay!
+    - config/symbols.beta.txt
+    - config/symbols.stmad.txt
+  undefined_funcs_auto_path: config/undefined_funcs_auto.stmad.txt
+  undefined_syms_auto_path:  config/undefined_syms_auto.stmad.txt
+  find_file_boundaries: yes
+  use_legacy_include_asm: no
+  migrate_rodata_to_functions: no
+  asm_jtbl_label_macro: jlabel
+  extensions_path: tools/splat_ext
+  string_encoding: SHIFT-JIS
+  section_order:
+    - ".data"
+    - ".rodata"
+    - ".text"
+    - ".bss"
+    - ".sbss"
+sha1: adb3303e1ea707c63dfa978511a88cab4f61970a
+segments:
+  - name: stmad
+    type: code
+    start: 0x00000000
+    vram:  0x80180000
+    align: 4
+    subalign: 4
+    subsegments:
+      - [0x0, .data, header]
+      - [0xB8, data]
+      - [0x5B4, .data, st_debug]
+      - [0x634, data]
+      - [0x6B4, .data, st_update]
+      - [0x6DC, .data, collision]
+      - [0x9D4, .data, e_red_door]
+      - [0x9EC, .data, st_common]
+      - [0xBEC, .data, e_collect]
+      - [0xED8, .data, e_collect] # g_collectVelocity
+      - [0xEF8, .data, e_misc]
+      - [0x1068, data]
+      - [0x1130, data, g_Rooms]
+      - [0x11D4, data] # assets/st/mad/0.objlayout
+      # - [0x11E8, data] # assets/st/mad/1.objlayout
+      # - [0x1206, data] # assets/st/mad/2.objlayout
+      # - [0x12B0, data] # assets/st/mad/3.objlayout
+      # - [0x135A, data] # assets/st/mad/4.objlayout
+      # - [0x1404, data] # assets/st/mad/5.objlayout
+      # - [0x14AE, data] # assets/st/mad/6.objlayout
+      # - [0x1558, data] # assets/st/mad/7.objlayout
+      # - [0x1602, data] # assets/st/mad/8.objlayout
+      # - [0x16AC, data] # assets/st/mad/9.objlayout
+      # - [0x1756, data] # assets/st/mad/10.objlayout
+      # - [0x1774, data] # assets/st/mad/11.objlayout
+      # - [0x1788, data] # assets/st/mad/12.objlayout
+      # - [0x17A6, data] # assets/st/mad/13.objlayout
+      # - [0x1850, data] # assets/st/mad/14.objlayout
+      # - [0x18FA, data] # assets/st/mad/15.objlayout
+      # - [0x19A4, data] # assets/st/mad/16.objlayout
+      # - [0x1A4E, data] # assets/st/mad/17.objlayout
+      # - [0x1AF8, data] # assets/st/mad/18.objlayout
+      # - [0x1BA2, data] # assets/st/mad/19.objlayout
+      # - [0x1C4C, data] # assets/st/mad/20.objlayout
+      # - [0x1CF6, data] # assets/st/mad/21.objlayout
+      - [0x1404, data]
+      - [0x1774, data]
+      - [0x19A4, data]
+      - [0x1D14, data]
+      - [0xD794, rodata]
+      - [0xD7CC, .rodata, e_red_door] # EntityRedDoor
+      - [0xD83C, .rodata, e_collect]
+      - [0xD85C, .rodata, e_collect] # EntityEquipItemDrop
+      - [0xD874, .rodata, e_misc]
+      - [0xD8AC, rodata]
+      - [0xD8C0, .rodata, prim_helpers]
+      - [0xD8C8, c]
+      - [0xE5AC, c, st_debug]
+      - [0xE830, c, e_breakable]
+      - [0xE964, c, st_update]
+      - [0xEDB8, c, collision]
+      - [0x10544, c, create_entity]
+      - [0x110A8, c, e_red_door]
+      - [0x11D3C, c, st_common]
+      - [0x1344C, c, e_collect]
+      - [0x149C0, c, e_misc]
+      - [0x17B94, c]
+      - [0x18FA0, c, prim_helpers]
+      - [0x197D8, .bss, create_entity]
+      - [0x197ED, .bss, bss]
+      - [0x19E7E, .bss, e_collect]
+  - [0x19E94]

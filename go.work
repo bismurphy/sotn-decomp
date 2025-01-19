@@ -1,0 +1,7 @@
+go 1.22
+
+use ./tools/gfxsotn
+
+use ./tools/sotn-disk
+
+use ./tools/sotn-assets

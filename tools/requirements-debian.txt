@@ -1,0 +1,16 @@
+bchunk
+binutils-mipsel-linux-gnu
+binutils-sh-elf
+bsdmainutils
+cargo
+clang-format
+coreutils
+curl
+gcc-mipsel-linux-gnu
+git
+make
+p7zip-full
+python3-pip
+python3-venv
+unzip
+wget
