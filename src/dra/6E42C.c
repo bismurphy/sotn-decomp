@@ -13,10 +13,7 @@ void func_8010E42C(u32 substep) {
     }
 }
 
-u8 D_800ACF4C[] = {0x00, 0x11, 
-                   0x04, 0x15, 
-                   0x01, 0x10, 
-                   0x03, 0x23};
+u8 D_800ACF4C[] = {0x00, 0x11, 0x04, 0x15, 0x01, 0x10, 0x03, 0x23};
 
 void func_8010E470(s32 arg0, s32 arg1) {
     PLAYER.velocityX = arg1;
@@ -47,18 +44,17 @@ void func_8010E4D0(void) {
 }
 
 u8 D_800ACF54[] = {
-    0x04, 0x05, 
-    0x0A, 0x0B, 
-    0x0E, 0x0F, 
-    0x1D, 0x1E, 
-    0x04, 0x03, 
-    0x00, 0x00,
+    0x04, 0x05, 0x0A, 0x0B, 0x0E, 0x0F, 0x1D, 0x1E, 0x04, 0x03, 0x00, 0x00,
 };
 
 // Corresponding RIC function is RicLandToTheGround (much simpler)
 void func_8010E570(s32 arg0) {
     s32 anim = 0;
     bool atLedge = false;
+<<<<<<< HEAD
+=======
+
+>>>>>>> 08eeeb9ed (format midway)
     if (g_Player.pl_vram_flag & 0x20) {
         atLedge = true;
     }
@@ -140,6 +136,10 @@ void func_8010E7AC(void) {
     if (g_Player.prev_step != Player_Walk) {
         SetPlayerAnim(28);
     }
+<<<<<<< HEAD
+=======
+
+>>>>>>> 08eeeb9ed (format midway)
     PLAYER.velocityX = 0;
     PLAYER.velocityY = FIX(2);
     g_Player.timers[ALU_T_6] = 8;
@@ -374,7 +374,6 @@ void func_8010ED54(u8 anim) {
     g_Player.unk48 = 0;
 }
 
-
 bool func_8010EDB8(void) {
     Entity* ent6C;
     bool var_s7; // Triggers on some kind of special move spell
@@ -599,6 +598,10 @@ block_45:
         PLAYER.step_s = 0x51;
         PlaySfx(SFX_VO_ALU_PAIN_A);
         return true;
+<<<<<<< HEAD
+=======
+
+>>>>>>> 08eeeb9ed (format midway)
     case 12: // Shotel
         // When shotel is thrown away, attempting to attack will make a punch
         if (CheckChainLimit(equipped_item->specialMove, hand) >= 0 &&
