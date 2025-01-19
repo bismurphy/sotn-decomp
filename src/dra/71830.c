@@ -95,10 +95,10 @@ bool func_801119C4(void) {
 }
 
 void func_80111CC0(void) {
-    if (g_Player.timers[1]) {
+    if (g_Player.timers[ALU_T_CURSE]) {
         CreateEntFactoryFromEntity(g_CurrentEntity, FACTORY(44, 0x17), 0);
     }
-    if (g_Player.timers[0]) {
+    if (g_Player.timers[ALU_T_POISON]) {
         CreateEntFactoryFromEntity(g_CurrentEntity, FACTORY(44, 0x16), 0);
     }
 }
@@ -221,7 +221,7 @@ bool func_8011203C(void) {
     return false;
 }
 
-void func_801120B4(void) {
+void PlayerStepStand(void) {
     s32 x_offset;
     u16 local_flags = 3;
     s32 atLedge;
@@ -531,7 +531,7 @@ void func_801120B4(void) {
     }
 }
 
-void func_80112B64(void) {
+void PlayerStepWalk(void) {
     if (func_8010FDF8(0x4301C) == 0) {
         SetSpeedX(0x18000);
         if (CheckMoveDirection() == 0) {

@@ -965,7 +965,7 @@ block_748:
             self->ext.playerBlink.unk80 = 8;
             switch ((u32)sp4c[7]) {
             case 0x7000:
-                if (!g_Player.timers[1]) {
+                if (!g_Player.timers[ALU_T_CURSE]) {
                     self->step += 1;
                 }
                 break;
@@ -976,7 +976,7 @@ block_748:
                 }
                 break;
             case 0x7002:
-                sp40 = g_Player.timers[0];
+                sp40 = g_Player.timers[ALU_T_POISON];
                 if (sp40 == 0) {
                     self->step += 1;
                 }

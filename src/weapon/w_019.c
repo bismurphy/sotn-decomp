@@ -63,7 +63,7 @@ void EntityWeaponAttack(Entity* self) {
 
         g_api.PlaySfx(SFX_WEAPON_APPEAR);
         g_api.PlaySfx(SFX_EXPLODE_A);
-        g_Player.timers[12] = 4;
+        g_Player.timers[ALU_T_12] = 4;
         self->step++;
         break;
     case 1:

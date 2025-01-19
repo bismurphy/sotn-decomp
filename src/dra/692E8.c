@@ -384,7 +384,7 @@ static void CheckStageCollision(s32 isTransformed) {
         x = PLAYER.posX.i.hi + g_SensorsFloor[i].x;
         y = PLAYER.posY.i.hi + g_SensorsFloor[i].y;
         CheckCollision(x, y, &g_Player.colFloor[i], 0);
-        if (g_Player.timers[7] &&
+        if (g_Player.timers[ALU_T_7] &&
             g_Player.colFloor[i].effects & EFFECT_SOLID_FROM_ABOVE) {
             CheckCollision(x, y + 12, &sp10, 0);
             if (!(sp10.effects & EFFECT_SOLID)) {
@@ -629,7 +629,7 @@ void EntityAlucard(void) {
                         break;
                     case 3:
                         PLAYER.palette = g_Player.pl_high_jump_timer;
-                        g_Player.timers[15] = 12;
+                        g_Player.timers[ALU_T_15] = 12;
                         break;
                     case 4: {
                         s32 temp_s1 = ((g_GameTimer & 0xF) << 8);
@@ -661,16 +661,16 @@ void EntityAlucard(void) {
                         case 0:
                             if (!(g_Player.status & (PLAYER_STATUS_STONE |
                                                      PLAYER_STATUS_CURSE))) {
-                                g_Player.timers[4] = 0xC;
-                                g_Player.timers[15] = 0xC;
+                                g_Player.timers[ALU_T_4] = 0xC;
+                                g_Player.timers[ALU_T_15] = 0xC;
                                 func_8010E168(1, 0xC);
                             }
                             continue;
                         case 1:
                             if (!(g_Player.status & (PLAYER_STATUS_STONE |
                                                      PLAYER_STATUS_CURSE))) {
-                                g_Player.timers[4] = 0xC;
-                                g_Player.timers[15] = 0xC;
+                                g_Player.timers[ALU_T_4] = 0xC;
+                                g_Player.timers[ALU_T_15] = 0xC;
                                 func_8010E168(1, 0xC);
                             }
                             continue;
@@ -682,8 +682,8 @@ void EntityAlucard(void) {
                             if (!(g_Player.status &
                                   (PLAYER_STATUS_STONE | PLAYER_STATUS_POISON |
                                    PLAYER_STATUS_CURSE))) {
-                                g_Player.timers[4] = 0xC;
-                                g_Player.timers[15] = 0xC;
+                                g_Player.timers[ALU_T_4] = 0xC;
+                                g_Player.timers[ALU_T_15] = 0xC;
                                 func_8010E168(1, 0xC);
                             }
                             continue;
@@ -777,7 +777,8 @@ void EntityAlucard(void) {
 // HD and US test this in slightly different places leading to this and the
 // following ifdef.
 #if defined(VERSION_HD)
-            if (g_Player.timers[13] | g_Player.timers[14]) {
+            if (g_Player.timers[ALU_T_INVINCIBLE] |
+                g_Player.timers[ALU_T_INVINCIBLE_CONSUMABLES]) {
                 goto specialmove;
             }
 #endif
@@ -788,7 +789,8 @@ void EntityAlucard(void) {
                     SetPlayerStep(Player_BossGrab);
                 } else {
 #if defined(VERSION_US)
-                    if (!(g_Player.timers[13] | g_Player.timers[14])) {
+                    if (!(g_Player.timers[ALU_T_INVINCIBLE] |
+                          g_Player.timers[ALU_T_INVINCIBLE_CONSUMABLES])) {
 #elif defined(VERSION_HD)
                     if (1) { // to make curly braces match
 #endif
@@ -818,7 +820,7 @@ void EntityAlucard(void) {
                                 g_Player.pl_high_jump_timer = 0x8166;
                                 g_Player.unk18 = damage.effects;
                                 func_8010E168(1, 0xC);
-                                g_Player.timers[3] = 6;
+                                g_Player.timers[ALU_T_3] = 6;
                                 PlaySfx(SFX_VO_ALU_PAIN_A);
                                 CreateHPNumMove(1, 0);
                                 break;
@@ -830,7 +832,7 @@ void EntityAlucard(void) {
                                     g_CurrentEntity, FACTORY(0x2C, 0x58), 0);
                                 g_Player.pl_high_jump_timer = 0x8166;
                                 func_8010E168(1, 0xC);
-                                g_Player.timers[3] = 6;
+                                g_Player.timers[ALU_T_3] = 6;
                                 break;
                             case 3:
                                 g_Player.unk18 = damage.effects;
@@ -953,16 +955,16 @@ block_160:
     D_800ACDF8 = g_Player.timers[ALU_T_DARKMETAMORPH];
     switch (PLAYER.step) {
     case Player_Stand:
-        func_801120B4();
+        PlayerStepStand();
         break;
     case Player_Walk:
-        func_80112B64();
+        PlayerStepWalk();
         break;
     case Player_Crouch:
-        func_801131C4();
+        PlayerStepCrouch();
         break;
     case Player_Fall:
-        func_80113148();
+        PlayerStepFall();
         break;
     case Player_Jump:
         PlayerStepJump();
@@ -971,72 +973,72 @@ block_160:
         ControlBatForm();
         break;
     case Player_UnmorphBat:
-        func_801177A0();
+        PlayerStepUnmorphBat();
         break;
     case Player_MorphMist:
         ControlMistForm();
         break;
     case Player_UnmorphMist:
-        func_801182F8();
+        PlayerStepUnmorphMist();
         break;
     case Player_MorphWolf:
-        func_8012EF2C();
+        PlayerStepMorphWolf();
         break;
     case Player_UnmorphWolf:
-        func_8012EAD0();
+        PlayerStepUnmorphWolf();
         break;
     case Player_HighJump:
-        func_80113AAC();
+        PlayerStepHighJump();
         break;
     case Player_SwordWarp:
-        func_801186EC();
+        PlayerStepSwordWarp();
         break;
     case Player_Hit:
         AlucardHandleDamage(&damage, var_s6, var_s7);
         break;
     case Player_StatusStone:
-        func_80114DF4(var_fp);
+        PlayerStepStatusStone(var_fp);
         break;
     case Player_BossGrab:
-        func_80116208();
+        PlayerStepBossGrab();
         break;
     case Player_Kill:
-        func_80115394(&damage, var_s6, var_s7);
+        PlayerStepKill(&damage, var_s6, var_s7);
         break;
     case Player_Unk17:
-        func_80115BB0();
+        PlayerStepUnk17();
         break;
     case Player_Teleport:
-        func_80115DA0();
+        PlayerStepTeleport();
         break;
     case Player_SpellDarkMetamorphosis:
-        func_80118614();
+        PlayerStepDarkMetamorphosis();
         break;
     case Player_SpellHellfire:
         PlayerStepHellfire();
         break;
     case Player_SpellSoulSteal:
-        func_80118670();
+        PlayerStepSoulSteal();
         break;
     case Player_SpellSummonSpirit:
     case Player_SpellTetraSpirit:
     case Player_SpellSwordBrothers:
-        func_80118640();
+        PlayerStepSummonSpirit();
         break;
     case Player_Unk48:
-        func_801166A4();
+        PlayerStepUnk48();
         break;
     case Player_Unk49:
-        func_8011678C();
+        PlayerStepUnk49();
         break;
     case Player_Unk50:
-        func_801167D0();
+        PlayerStepUnk50();
         break;
     case Player_KillWater:
-        func_80115F54();
+        PlayerStepKillWater();
         break;
     case Player_AlucardStuck:
-        func_80117AC0();
+        PlayerStepAlucardStuck();
         break;
     case Player_AxearmorStand:
         weapon_func = D_8017A000.func_ptr_80170004;
@@ -1058,47 +1060,47 @@ block_160:
     g_Player.unk08 = g_Player.status;
     g_Status.D_80097BF8 &= ~1;
     switch (PLAYER.step) { /* switch 5 */
-    case 2:                /* switch 5 */
+    case Player_Crouch:    /* switch 5 */
         if (PLAYER.step_s != 2) {
             newStatus = PLAYER_STATUS_CROUCH;
         }
         newStatus |= 0x10000000;
         break;
-    case 1: /* switch 5 */
+    case Player_Walk: /* switch 5 */
         newStatus = 0x04000000;
         /* fallthrough */
-    case 0: /* switch 5 */
+    case Player_Stand: /* switch 5 */
         newStatus |= 0x10000000;
         if (PLAYER.step_s == 4) {
             newStatus |= 0x08100000;
         }
         break;
-    case 3: /* switch 5 */
-    case 4: /* switch 5 */
+    case Player_Fall: /* switch 5 */
+    case Player_Jump: /* switch 5 */
         newStatus = 0x10002000;
         break;
-    case 5: /* switch 5 */
+    case Player_MorphBat: /* switch 5 */
         if (PLAYER.step_s == 3) {
             func_8010E168(1, 4);
             g_unkGraphicsStruct.unk1C |= 2;
         }
         newStatus = 0x28100001;
         break;
-    case 7: /* switch 5 */
+    case Player_MorphMist: /* switch 5 */
         func_8010E168(1, 4);
         newStatus = 0x28100002;
         PLAYER.palette = 0x810D;
         break;
-    case 14:
+    case Player_UnmorphMist:
         newStatus = 0x28900002;
         PLAYER.palette = 0x810D;
         func_8010E168(1, 4);
         break;
-    case 6: /* switch 5 */
+    case Player_AlucardStuck: /* switch 5 */
         func_8010E168(1, 4);
         newStatus = 0x18100010 | PLAYER_STATUS_CROUCH;
         break;
-    case 9: /* switch 5 */
+    case Player_UnmorphBat: /* switch 5 */
         newStatus = 0x28500001;
         if (PLAYER.step_s == 0) {
             PLAYER.animSet = 0xD;
@@ -1106,67 +1108,67 @@ block_160:
         }
         func_8010E168(1, 4);
         break;
-    case 8: /* switch 5 */
+    case Player_HighJump: /* switch 5 */
         func_8010E168(1, 4);
         newStatus = 0x38000000;
         break;
-    case 10: /* switch 5 */
-    case 48: /* switch 5 */
-    case 49: /* switch 5 */
+    case Player_Hit:   /* switch 5 */
+    case Player_Unk48: /* switch 5 */
+    case Player_Unk49: /* switch 5 */
         newStatus = 0x38110000;
         func_8010E168(1, 12);
         break;
-    case 11: /* switch 5 */
+    case Player_StatusStone: /* switch 5 */
         newStatus = 0x38110080;
         break;
-    case 12: /* switch 5 */
+    case Player_BossGrab: /* switch 5 */
         newStatus = 0x38110040;
         func_8010E168(1, 12);
         break;
-    case 13: /* switch 5 */
-    case 16: /* switch 5 */
+    case Player_KillWater: /* switch 5 */
+    case Player_Kill:      /* switch 5 */
         newStatus = 0x18150000;
         if (PLAYER.step_s == 0x80) {
             newStatus = 0x181D0000;
         }
         func_8010E168(1, 12);
         break;
-    case 17: /* switch 5 */
+    case Player_Unk17: /* switch 5 */
         newStatus = 0x18150000;
         func_8010E168(1, 12);
         break;
-    case 18: /* switch 5 */
+    case Player_Teleport: /* switch 5 */
         newStatus = 0x18100000;
         func_8010E168(1, 12);
         break;
-    case 33: /* switch 5 */
-    case 35: /* switch 5 */
-    case 39: /* switch 5 */
+    case Player_SpellSummonSpirit:  /* switch 5 */
+    case Player_SpellTetraSpirit:   /* switch 5 */
+    case Player_SpellSwordBrothers: /* switch 5 */
         func_8010E168(1, 0x10);
         newStatus = 0x38000200 | PLAYER_STATUS_CROUCH;
         break;
-    case 32: /* switch 5 */
-    case 34: /* switch 5 */
-    case 37: /* switch 5 */
+    case Player_SpellDarkMetamorphosis: /* switch 5 */
+    case Player_SpellHellfire:          /* switch 5 */
+    case Player_SpellSoulSteal:         /* switch 5 */
         func_8010E168(1, 0x10);
         newStatus = 0x38000200;
         break;
-    case 43: /* switch 5 */
+    case Player_AxearmorHit: /* switch 5 */
         func_8010E168(1, 0x14);
         /* fallthrough */
-    case 40: /* switch 5 */
-    case 41: /* switch 5 */
-    case 42: /* switch 5 */
-    case 50: /* switch 5 */
+    case Player_AxearmorStand: /* switch 5 */
+    case Player_AxearmorWalk:  /* switch 5 */
+    case Player_AxearmorJump:  /* switch 5 */
+    case Player_Unk50:         /* switch 5 */
         PLAYER.unk5A = 0x64;
         newStatus = 0x29100000;
         break;
-    case 15: /* switch 5 */
+    case Player_SwordWarp: /* switch 5 */
         newStatus = 0x18100000;
         func_8010E168(4, 0xC);
         PLAYER.palette = 0x810D;
         break;
-    case 24: /* switch 5 */
+    case Player_MorphWolf: /* switch 5 */
         g_unkGraphicsStruct.unk1C |= 2;
         if (abs(PLAYER.velocityX) > FIX(3)) {
             func_8010E168(1, 4);
@@ -1179,24 +1181,24 @@ block_160:
             newStatus |= PLAYER_STATUS_CROUCH;
         }
         break;
-    case 25: /* switch 5 */
+    case Player_UnmorphWolf: /* switch 5 */
         newStatus = 0x68100000;
         func_8010E168(1, 4);
         break;
     }
-    if (g_Player.timers[9]) {
+    if (g_Player.timers[ALU_T_9]) {
         newStatus |= 0x400;
     }
-    if (g_Player.timers[10]) {
+    if (g_Player.timers[ALU_T_10]) {
         newStatus |= 0x800;
     }
-    if (g_Player.timers[12]) {
+    if (g_Player.timers[ALU_T_12]) {
         newStatus |= 0x1000;
     }
-    if (g_Player.timers[0]) {
+    if (g_Player.timers[ALU_T_POISON]) {
         newStatus |= 0x28104000;
     }
-    if (g_Player.timers[1]) {
+    if (g_Player.timers[ALU_T_CURSE]) {
         newStatus |= 0x28108000;
     }
     if (*D_80097448 != 0) {
@@ -1216,15 +1218,16 @@ block_160:
     if (newStatus & 0x20000000) {
         g_Status.D_80097BF8 |= 1;
     }
-    if (g_Player.timers[13] | g_Player.timers[14]) {
+    if (g_Player.timers[ALU_T_INVINCIBLE] |
+        g_Player.timers[ALU_T_INVINCIBLE_CONSUMABLES]) {
         g_Player.status |= PLAYER_STATUS_UNK100;
     }
     if ((g_Player.unk08 & 0x10000) &&
         !(g_Player.status & (PLAYER_STATUS_UNK10000 | PLAYER_STATUS_DEAD))) {
         func_8010E168(1, 0xC);
         if (!(g_Player.status & (PLAYER_STATUS_POISON | PLAYER_STATUS_CURSE))) {
-            g_Player.timers[4] = 0xC;
-            g_Player.timers[15] = 4;
+            g_Player.timers[ALU_T_4] = 0xC;
+            g_Player.timers[ALU_T_15] = 4;
             PLAYER.palette = 0x8100;
         }
     }
@@ -1939,9 +1942,4 @@ static void CheckWallLeft(void) {
             }
         }
     }
-}
-
-void SetPlayerStep(PlayerSteps step) {
-    PLAYER.step = step;
-    PLAYER.step_s = 0;
 }

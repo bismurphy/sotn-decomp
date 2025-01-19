@@ -213,7 +213,7 @@ void func_8012D3E8(void) {
 void func_8012DBBC(void) {
     s32 vel_boost;
 
-    if (g_Player.timers[5] && (g_Player.padTapped & PAD_CROSS)) {
+    if (g_Player.timers[ALU_T_5] && (g_Player.padTapped & PAD_CROSS)) {
         func_8012CCE4();
         return;
     }
@@ -278,7 +278,7 @@ void func_8012DBBC(void) {
 void func_8012DF04(void) {
     s32 velocityBoost;
 
-    if (g_Player.timers[5] && (g_Player.padTapped & PAD_CROSS)) {
+    if (g_Player.timers[ALU_T_5] && (g_Player.padTapped & PAD_CROSS)) {
         func_8012CCE4();
         return;
     }
@@ -442,7 +442,7 @@ void func_8012E550(void) {
         if (g_Player.padPressed & PAD_DOWN) {
             for (i = 0; i < NUM_HORIZONTAL_SENSORS; i++) {
                 if (g_Player.colFloor[i].effects & EFFECT_SOLID_FROM_ABOVE) {
-                    g_Player.timers[7] = 8;
+                    g_Player.timers[ALU_T_7] = 8;
                     func_8012CED4();
                     PLAYER.animFrameIdx = 4;
                     PLAYER.animFrameDuration = 1;
@@ -588,7 +588,7 @@ void func_8012E9C0(void) {
     PLAYER.velocityY = FIX(-1.5);
 }
 
-void func_8012EAD0(void) {
+void PlayerStepUnmorphWolf(void) {
     s32 i;
     s32 else_cycles;
 
@@ -708,7 +708,7 @@ void func_8012ED30(void) {
     }
 }
 
-void func_8012EF2C(void) {
+void PlayerStepMorphWolf(void) {
     s16 var_v1;
     s32 i;
 

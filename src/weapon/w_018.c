@@ -60,7 +60,7 @@ void EntityWeaponAttack(Entity* self) {
         self->anim = D_82000_8017A6A8;
         SetWeaponProperties(self, 1);
         g_api.PlaySfx(SFX_MAGIC_WEAPON_APPEAR_B);
-        g_Player.timers[12] = 4;
+        g_Player.timers[ALU_T_12] = 4;
         self->step++;
         break;
     // image of dracula appears

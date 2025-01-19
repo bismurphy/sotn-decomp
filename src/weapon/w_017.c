@@ -279,7 +279,7 @@ void EntityWeaponAttack(Entity* self) {
             prim = prim->next;
         }
 
-        g_Player.timers[12] = 4;
+        g_Player.timers[ALU_T_12] = 4;
         self->step++;
         break;
 

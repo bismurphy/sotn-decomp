@@ -263,7 +263,7 @@ static void EntityWeaponAttack(Entity* self) {
 
         D_58000_8017BB28++;
         g_api.PlaySfx(SFX_WEAPON_SWISH_B);
-        g_Player.timers[9] = 4;
+        g_Player.timers[ALU_T_9] = 4;
         self->step++;
     } else {
         if (maskedParams == 0x100) {
@@ -364,7 +364,7 @@ static s32 func_ptr_80170004(Entity* self) {
         DestroyEntityWeapon(true);
         self->hitboxHeight = 4;
         self->hitboxWidth = 4;
-        g_Player.timers[10] = 4;
+        g_Player.timers[ALU_T_10] = 4;
         self->ext.weapon_012.vol = 0x60;
         self->step++;
         break;

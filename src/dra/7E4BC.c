@@ -1196,11 +1196,11 @@ void EntityPlayerPinkEffect(Entity* self) {
                 }
                 break;
             case 0x80:
-                g_Player.timers[0] = 2;
+                g_Player.timers[ALU_T_POISON] = 2;
                 PlaySfx(SFX_MAGIC_WEAPON_APPEAR_A);
                 break;
             case 0x81:
-                g_Player.timers[1] = 2;
+                g_Player.timers[ALU_T_CURSE] = 2;
                 PlaySfx(SFX_MAGIC_WEAPON_APPEAR_A);
                 break;
             case 0x84: // Potion most likely.
