@@ -490,3 +490,5 @@ void func_8010E3E0(void) {
         g_Player.unk48 = 0;
     }
 }
+
+// Next function in DRA is func_8010E42C. Next PSP is func_8010FDF8. File split.
