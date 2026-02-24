@@ -115,6 +115,14 @@ def rgb_to_web(rgb):
     r,g,b = rgb
     return f"#{r:02X}{g:02X}{b:02X}"
 
+# SOTN is weird. (but we already knew that). For an RGBA color,
+# A is 0xFF (opaque) or 0x7F (transparent).
+# However, if RGB is 0, 0, 0, then the logic is inverted.
+def is_transparent(palette_entry):
+    all_black = all(x == 0 for x in palette_entry[:3])
+    flag_set = not (palette_entry[3] & 0x80)
+    return  all_black ^ flag_set
+
 class EditorGUI:
     def __init__(self, root, pal_orig):
         self.root = root
@@ -134,7 +142,7 @@ class EditorGUI:
             btn = tk.Button(frame, fg='white', bg=color_hex, width=4, height=2,
                             command=lambda idx=i: self.select_color(idx))
             # Indicate the transparency flag by showing a little tile icon
-            if not self.palette[i][3] & 0x80:
+            if is_transparent(self.palette[i]):
                 btn.config(text="◩")
             btn.pack()
 
@@ -156,17 +164,31 @@ class EditorGUI:
         # For a fun example of a somewhat comparable hack, look up "Thank you for playing Wing Commander"
         self.save_button = tk.Button(self.root, text='Save Palette', command=self.root.destroy)
         self.save_button.grid(row=5, column=12, columnspan=4)
+
+        # Callout to prompt user to select a color. Goes away when one is selected.
+        self.color_selection_reminder = tk.Label(text="To start, select a color to modify.")
+        self.color_selection_reminder.grid(row=2, column=7,columnspan=6)
         
     def set_transparency(self):
         if self.selected_idx is None:
             return
         transp = self.transparency_check.get()
-        self.palette[self.selected_idx][3] = 0x7F | (0 if transp else 0x80)
+        self.set_transp_flag(transp)
         self.color_buttons[self.selected_idx].config(text=("◩" if transp else ""))
+        
 
-    def select_color(self, chosen_button): 
-        # un-select the frame of the previously selected idx
-        if self.selected_idx is not None:
+    # Set the A value in the palette to properly reflect transparency, given the weirdness with black
+    def set_transp_flag(self, is_transp):
+        black = all(x == 0 for x in self.palette[self.selected_idx][:3])
+        self.palette[self.selected_idx][3] = 0x7F | (0 if (black ^ is_transp) else 0x80)
+
+    # Callback that triggers when you click a button to select which color is active for modifying
+    def select_color(self, chosen_button):
+        if self.selected_idx is None:
+            # For first selection, hide the reminder. All done.
+            self.color_selection_reminder.config(text='')
+        else:
+            # for subsequent selections, hide the frame on the previous selection.
             self.color_buttons[self.selected_idx].master.config(bg=self.root['bg'])
         self.color_buttons[chosen_button].master.config(bg='red')
 
@@ -177,12 +199,14 @@ class EditorGUI:
         for i, slider in enumerate(self.sliders):
             slider.set(self.palette[chosen_button][i])
         # Set transparency checkbox to match the chosen button
-        self.transparency_check.set(not self.palette[chosen_button][3] & 0x80)
+        self.transparency_check.set(is_transparent(self.palette[chosen_button]))
         
     # Gets called when any slider is moved.
     def update_color(self, slider_changed):
         if self.selected_idx is None:
             return
+        
+        was_transparent = is_transparent(self.palette[self.selected_idx])
         legal_values = np.array([int(x * 255 / 31) for x in range(32)])
         for slider in self.sliders:
             val = slider.get()
@@ -193,7 +217,8 @@ class EditorGUI:
         for i in range(3):
             self.palette[self.selected_idx][i] = newColor[i]
             self.color_buttons[self.selected_idx].config(bg=rgb_to_web(self.palette[self.selected_idx][:3]))
-        
+        # Set the flag after setting the color. That way if we went to/from black we toggle as needed.
+        self.set_transp_flag(was_transparent)
 
 if __name__ == '__main__':
     #https://stackoverflow.com/questions/3579568/choosing-a-file-in-python-with-simple-dialog
