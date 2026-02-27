@@ -9,7 +9,7 @@ from PIL import Image, ImageTk
 import colorsys
 
 
-SPRITESHEET_SIZE = 256
+SPRITESHEET_SIZE = 128
 
 def hexdump(d):
     for i in range(0, len(d), 16):
@@ -37,7 +37,8 @@ class Chunk():
         
         calculated_crc = zlib.crc32(self.raw[4:-4]).to_bytes(4)
         assert(calculated_crc == self.crc)
-
+    def __repr__(self):
+        return f"PNG chunk object of type {self.type}"
 class PNGMake():
     def __init__(self):
         self.chunks = []
@@ -50,7 +51,7 @@ class PNGMake():
 class PNGParse():
     def __init__(self, chunkset):
         self.chunks = chunkset
-        self.img_data = []
+        self.img_data = bytearray()
         for chunk in self.chunks:
             match chunk.type:
                 case 'IHDR':
@@ -85,12 +86,24 @@ class PNGParse():
         assert len(data) == len(self.palette)
         for i in range(len(data)):
             self.palette[i].append(data[i])
+    # IDAT chunks are a bit weird.
     def parse_idat(self,idat_chunk):
         decompressed = zlib.decompress(idat_chunk.payload)
-        filter_type = decompressed[0]
-        #nofilter
-        if filter_type == 0:
-            self.img_data.append(decompressed[1:])
+        # The decompressed data should consist of a big long list of scanlines from the image.
+        # Each scanline has a single byte to indicate the filter type, and then the pixel data.
+        # Given that we only work with indexed images, the number of bytes in each line should
+        # be the image width plus 1 (one for each pixel, and one for the filter type).
+        # This means the total size of the image should be that, multiplied by the number of
+        # scanlines, which is the height.
+        line_data_size = self.width+1
+        assert len(decompressed) == self.height * line_data_size
+        scanlines = [decompressed[i:i+line_data_size] for i in range(0, len(decompressed), line_data_size)]
+        assert len(scanlines) == self.height
+        for scanline in scanlines:
+            filter_type = scanline[0]
+            # this is the only filter i can parse
+            if filter_type == 0: #nofilter
+                self.img_data.extend(scanline[1:])
     def parse_end(self, end_chunk):
         pass
 def load_png_chunks(databytes):
@@ -119,7 +132,7 @@ def load_sotn_palette(filebytes):
     assert orig_img.compression_method == 0 # fixed value for png. always 0, meaning deflate.
     assert orig_img.filter_method == 0 #also fixed at 0
     assert orig_img.interlace_method == 0 # no interlacing
-    assert orig_img.img_data == [bytes(range(16))] # sotn palette image should just be indices 0-16
+    assert orig_img.img_data == bytearray(range(16)) # sotn palette image should just be indices 0-16
     
     orig_palette = np.array(orig_img.palette,dtype='uint8').reshape(16,4)
     return orig_palette
@@ -174,7 +187,10 @@ class EditorGUI:
 
         self.transparency_check = tk.BooleanVar(value=False)
         transparency_checkbox = tk.Checkbutton(self.root, text="Transparency", var=self.transparency_check, command=self.set_transparency)
-        transparency_checkbox.grid(row=5, column=0, columnspan = 5)
+        transparency_checkbox.grid(row=5, column=0, columnspan = 4)
+
+        self.load_image_button = tk.Button(self.root, text='Load Image', command=self.select_spritesheet)
+        self.load_image_button.grid(row=5, column=4, columnspan=4)
 
         self.load_palette_button = tk.Button(self.root, text='Load Palette', command=self.select_palette)
         self.load_palette_button.grid(row=5, column=8, columnspan=4)
@@ -242,14 +258,21 @@ class EditorGUI:
         )
         self.canvas.itemconfig(canvas_img, image=self.tk_image)
 
-
-    # TODO, needs implementation
     def select_spritesheet(self):
-        self.image = Image.open(sprite_path).convert("RGBA")
+        #https://stackoverflow.com/questions/3579568/choosing-a-file-in-python-with-simple-dialog
+        filename = tkfd.askopenfilename()
+        with open(filename, 'rb') as f:
+            orig_filebytes = f.read()
+        chunks = load_png_chunks(orig_filebytes)
+        
+        orig_img = PNGParse(chunks)
+        dat_array = np.array(orig_img.img_data,dtype=np.uint8)
+        assert(dat_array.shape == (SPRITESHEET_SIZE * SPRITESHEET_SIZE,))
+        self.image_buffer = dat_array.reshape((SPRITESHEET_SIZE,SPRITESHEET_SIZE))
+        self.redraw()
 
     def select_palette(self):
-        #https://stackoverflow.com/questions/3579568/choosing-a-file-in-python-with-simple-dialog
-        filename = tkfd.askopenfilename() # show an "Open" dialog box and return the path to the selected file
+        filename = tkfd.askopenfilename()
         with open(filename, 'rb') as f:
             orig_filebytes = f.read()
         self.palette = load_sotn_palette(orig_filebytes)
@@ -268,7 +291,6 @@ class EditorGUI:
         transp = self.transparency_check.get()
         self.set_transp_flag(transp)
         self.color_buttons[self.selected_idx].config(text=("◩" if transp else ""))
-        
 
     # Set the A value in the palette to properly reflect transparency, given the weirdness with black
     def set_transp_flag(self, is_transp):
