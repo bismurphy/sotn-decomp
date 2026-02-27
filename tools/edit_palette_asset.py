@@ -6,8 +6,10 @@ import zlib
 import matplotlib.pyplot as plt
 import numpy as np
 from PIL import Image, ImageTk
+import colorsys
 
-CANVAS_SIZE = 512
+
+SPRITESHEET_SIZE = 256
 
 def hexdump(d):
     for i in range(0, len(d), 16):
@@ -139,7 +141,9 @@ class EditorGUI:
     def __init__(self, root):
         self.root = root
         self.root.title("SOTN Palette Editor")
-        self.palette = np.array([[0,0,0,0]]*16)
+        # initialize a colorful palette
+        sample_colors = [colorsys.hsv_to_rgb(i/16, 1, 1) + (1.0,) for i in range(16)]
+        self.palette = (np.array(sample_colors) * 255).astype(np.uint8)
         self.selected_idx = None
 
         self.color_buttons = []
@@ -178,6 +182,67 @@ class EditorGUI:
         self.save_button = tk.Button(self.root, text='Save Palette', command=self.save_palette_file)
         self.save_button.grid(row=5, column=12, columnspan=4)
 
+        # Start canvas-handling code.
+        self.image_buffer = np.zeros((SPRITESHEET_SIZE, SPRITESHEET_SIZE), dtype=np.uint8)
+        
+        self.root.grid_rowconfigure(6, weight=1)
+        for i in range(16):
+            self.root.columnconfigure(i, weight=1)
+        
+        self.canvas = tk.Canvas(self.root, bg='#333333', highlightthickness=0)
+        self.canvas.grid(row=6, column=0, columnspan=16, sticky="nsew")
+        
+        # These have to be self variables so they don't get garbage collected
+        self.tk_image = None
+        self.scale = 1
+        self.center_x = 0
+        self.center_y = 0
+
+        self.canvas.bind("<Configure>", self.rescale)
+        self.canvas.bind("<Button-1>", self.put_pixel)
+        self.canvas.bind("<B1-Motion>", self.put_pixel)
+
+        self.select_color(0)
+
+    def rescale(self, event=None):
+        """Resizes the display image to fit the canvas while maintaining aspect ratio."""
+        c_width = self.canvas.winfo_width()
+        c_height = self.canvas.winfo_height()
+
+        # Calculate maximum integer scale factor 
+        self.scale = max(1, min(c_width // SPRITESHEET_SIZE, c_height // SPRITESHEET_SIZE))
+        
+        render_size = SPRITESHEET_SIZE * self.scale
+        # put the canvas in the center of the available area
+        self.center_x = (c_width - render_size) // 2
+        self.center_y = (c_height - render_size) // 2
+
+        self.redraw()
+
+    def put_pixel(self, event):
+        # Event holds the pixel location within the canvas. Convert to pixel location in the sprite.
+        col = (event.x - self.center_x) // self.scale
+        row = (event.y - self.center_y) // self.scale
+        # events can happen outside canvas which makes weirdness
+        if 0 <= col < SPRITESHEET_SIZE and 0 <= row < SPRITESHEET_SIZE:
+            self.image_buffer[row][col] = self.selected_idx
+        self.redraw()
+
+
+    def redraw(self):
+        render_size = SPRITESHEET_SIZE * self.scale
+        depalettized_image = self.palette[self.image_buffer]
+        img_256x256 = Image.fromarray(depalettized_image, 'RGBA')
+        resized_img = img_256x256.resize((render_size, render_size), Image.NEAREST)
+        self.tk_image = ImageTk.PhotoImage(resized_img)
+        self.canvas.delete("all")
+        canvas_img = self.canvas.create_image(
+            self.center_x, self.center_y, 
+            image=self.tk_image, anchor="nw"
+        )
+        self.canvas.itemconfig(canvas_img, image=self.tk_image)
+
+
     # TODO, needs implementation
     def select_spritesheet(self):
         self.image = Image.open(sprite_path).convert("RGBA")
@@ -188,7 +253,6 @@ class EditorGUI:
         with open(filename, 'rb') as f:
             orig_filebytes = f.read()
         self.palette = load_sotn_palette(orig_filebytes)
-        self.selected_idx = None
 
         for i in range(len(self.palette)):
             self.color_buttons[i].config(bg=rgb_to_web(self.palette[i][:3]))
@@ -196,7 +260,8 @@ class EditorGUI:
                 self.color_buttons[i].config(text="◩")
             else:
                 self.color_buttons[i].config(text="")
-        
+        self.redraw()
+
     def set_transparency(self):
         if self.selected_idx is None:
             return
@@ -244,6 +309,7 @@ class EditorGUI:
             self.color_buttons[self.selected_idx].config(bg=rgb_to_web(self.palette[self.selected_idx][:3]))
         # Set the flag after setting the color. That way if we went to/from black we toggle as needed.
         self.set_transp_flag(was_transparent)
+        self.redraw()
 
     def save_palette_file(self):
         save_file = tkfd.asksaveasfilename(defaultextension='.png')
