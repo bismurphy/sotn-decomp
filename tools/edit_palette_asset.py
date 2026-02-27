@@ -5,6 +5,9 @@ from tkinter import filedialog as tkfd
 import zlib
 import matplotlib.pyplot as plt
 import numpy as np
+from PIL import Image, ImageTk
+
+CANVAS_SIZE = 512
 
 def hexdump(d):
     for i in range(0, len(d), 16):
@@ -33,6 +36,15 @@ class Chunk():
         calculated_crc = zlib.crc32(self.raw[4:-4]).to_bytes(4)
         assert(calculated_crc == self.crc)
 
+class PNGMake():
+    def __init__(self):
+        self.chunks = []
+    def makeHeader(self, width, height, bit_depth, color_type, compression, filter, interlace):
+        headerData = bytearray()
+        
+    def createPNG():
+        # Begin with fixed PNG header
+        fileData = bytearray([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a])
 class PNGParse():
     def __init__(self, chunkset):
         self.chunks = chunkset
@@ -124,10 +136,10 @@ def is_transparent(palette_entry):
     return  all_black ^ flag_set
 
 class EditorGUI:
-    def __init__(self, root, pal_orig):
+    def __init__(self, root):
         self.root = root
         self.root.title("SOTN Palette Editor")
-        self.palette = pal_orig
+        self.palette = np.array([[0,0,0,0]]*16)
         self.selected_idx = None
 
         self.color_buttons = []
@@ -159,15 +171,31 @@ class EditorGUI:
         self.transparency_check = tk.BooleanVar(value=False)
         transparency_checkbox = tk.Checkbutton(self.root, text="Transparency", var=self.transparency_check, command=self.set_transparency)
         transparency_checkbox.grid(row=5, column=0, columnspan = 5)
+
+        self.load_palette_button = tk.Button(self.root, text='Load Palette', command=self.select_palette)
+        self.load_palette_button.grid(row=5, column=8, columnspan=4)
         
-        # Clicking the save button actually just closes the window. We then continue into a save routine.
-        # For a fun example of a somewhat comparable hack, look up "Thank you for playing Wing Commander"
-        self.save_button = tk.Button(self.root, text='Save Palette', command=self.root.destroy)
+        self.save_button = tk.Button(self.root, text='Save Palette', command=self.save_palette_file)
         self.save_button.grid(row=5, column=12, columnspan=4)
 
-        # Callout to prompt user to select a color. Goes away when one is selected.
-        self.color_selection_reminder = tk.Label(text="To start, select a color to modify.")
-        self.color_selection_reminder.grid(row=2, column=7,columnspan=6)
+    # TODO, needs implementation
+    def select_spritesheet(self):
+        self.image = Image.open(sprite_path).convert("RGBA")
+
+    def select_palette(self):
+        #https://stackoverflow.com/questions/3579568/choosing-a-file-in-python-with-simple-dialog
+        filename = tkfd.askopenfilename() # show an "Open" dialog box and return the path to the selected file
+        with open(filename, 'rb') as f:
+            orig_filebytes = f.read()
+        self.palette = load_sotn_palette(orig_filebytes)
+        self.selected_idx = None
+
+        for i in range(len(self.palette)):
+            self.color_buttons[i].config(bg=rgb_to_web(self.palette[i][:3]))
+            if is_transparent(self.palette[i]):
+                self.color_buttons[i].config(text="◩")
+            else:
+                self.color_buttons[i].config(text="")
         
     def set_transparency(self):
         if self.selected_idx is None:
@@ -184,10 +212,7 @@ class EditorGUI:
 
     # Callback that triggers when you click a button to select which color is active for modifying
     def select_color(self, chosen_button):
-        if self.selected_idx is None:
-            # For first selection, hide the reminder. All done.
-            self.color_selection_reminder.config(text='')
-        else:
+        if self.selected_idx is not None:
             # for subsequent selections, hide the frame on the previous selection.
             self.color_buttons[self.selected_idx].master.config(bg=self.root['bg'])
         self.color_buttons[chosen_button].master.config(bg='red')
@@ -220,29 +245,24 @@ class EditorGUI:
         # Set the flag after setting the color. That way if we went to/from black we toggle as needed.
         self.set_transp_flag(was_transparent)
 
-if __name__ == '__main__':
-    #https://stackoverflow.com/questions/3579568/choosing-a-file-in-python-with-simple-dialog
-    filename = tkfd.askopenfilename() # show an "Open" dialog box and return the path to the selected file
-    with open(filename, 'rb') as f:
-        orig_filebytes = f.read()
-    pal_start = load_sotn_palette(orig_filebytes)
-    root = tk.Tk()
-    app = EditorGUI(root, pal_start)
-    root.mainloop()
+    def save_palette_file(self):
+        save_file = tkfd.asksaveasfilename(defaultextension='.png')
+        with open(save_file,'wb') as f:
+            # create a (mutable) bytearray object to be able to substitute in our new bytes
+            # Use the original file as a base since most of the PNG boilerplate is unchanged.
+            outbytes = bytearray()
 
-    save_file = tkfd.asksaveasfilename(defaultextension='.png')
-    with open(save_file,'wb') as f:
-        # create a (mutable) bytearray object to be able to substitute in our new bytes
-        # Use the original file as a base since most of the PNG boilerplate is unchanged.
-        outbytes = bytearray(orig_filebytes)
-
-        # Take the original file's palette and replace it.
-        newpal_bytes = bytearray(app.palette[:, 0:3].tobytes())
-        newpal_bytes.extend(zlib.crc32(b'PLTE'+newpal_bytes).to_bytes(4))
-        outbytes[0x29:0x29 + len(newpal_bytes)] = newpal_bytes
-        # Do the same with the transparency layer.
-        alphas = bytearray(app.palette[:,3].tobytes())
-        alphas.extend(zlib.crc32(b'tRNS' + alphas).to_bytes(4))
-        outbytes[0x65:0x65 + len(alphas)] = alphas
+            # Take the original file's palette and replace it.
+            newpal_bytes = bytearray(app.palette[:, 0:3].tobytes())
+            newpal_bytes.extend(zlib.crc32(b'PLTE'+newpal_bytes).to_bytes(4))
+            outbytes[0x29:0x29 + len(newpal_bytes)] = newpal_bytes
+            # Do the same with the transparency layer.
+            alphas = bytearray(app.palette[:,3].tobytes())
+            alphas.extend(zlib.crc32(b'tRNS' + alphas).to_bytes(4))
+            outbytes[0x65:0x65 + len(alphas)] = alphas
 
         f.write(outbytes)
+if __name__ == '__main__':
+    root = tk.Tk()
+    app = EditorGUI(root)
+    root.mainloop()
